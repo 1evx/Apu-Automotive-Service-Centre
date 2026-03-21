@@ -29,8 +29,8 @@ public abstract class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(unique = true, nullable = false)
     private String email;
@@ -44,8 +44,7 @@ public abstract class User implements Serializable {
 
     public User() {}
 
-    public User(String id, String email, String passwordHash, String role, String fullName, String phoneNumber) {
-        this.id = id;
+    public User(String email, String passwordHash, String role, String fullName, String phoneNumber) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
@@ -53,12 +52,12 @@ public abstract class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
     
-    public String getId() {
-        return id;
+    public Long getId() { 
+        return id; 
     }
-
-    public void setId(String id) {
-        this.id = id;
+    
+    public void setId(Long id) { 
+        this.id = id; 
     }
 
     public String getEmail() {

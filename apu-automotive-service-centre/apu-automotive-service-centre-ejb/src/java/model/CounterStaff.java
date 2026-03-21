@@ -19,8 +19,8 @@ public class CounterStaff extends User{
         super();
     }
 
-    public CounterStaff(String id, String email, String passwordHash, String role, String fullName, String phoneNumber) {
-        super(id, email, passwordHash, role, fullName, phoneNumber);
+    public CounterStaff(String email, String passwordHash, String role, String fullName, String phoneNumber) {
+        super(email, passwordHash, role, fullName, phoneNumber);
     }
     
 }

@@ -73,7 +73,7 @@
                                 <h3>Register Your Account</h3>
                                 <p>Please Enter Your Details</p>
                                 <div class="contact-form style2 bg-color2 p-0">
-                                    <form class="row" action="${pageContext.request.contextPath}/RegisterServlet" method="POST">
+                                    <form class="row" action="RegisterServlet" method="POST">
                                         <div class="col-12 mb-3">
                                             <input type="text" name="fullName" class="form-control" placeholder="Full Name" required>
                                         </div>
@@ -152,6 +152,22 @@
         <script src="static/js/nice-select.min.js"></script>
         <!--<< Main.js >>-->
         <script src="static/js/main.js"></script>
+        
+        <%-- 
+        Check if the Servlet left a pop-up message for us in the session.
+        If it did, trigger a JavaScript alert and then delete the message so it doesn't repeat.
+        --%>
+        <%
+            String popupMessage = (String) request.getSession().getAttribute("popupMessage");
+            if (popupMessage != null) {
+        %> 
+        <script> alert("<%= popupMessage%>"); </script>
+        <%
+                // Clear the message from the session
+                request.getSession().removeAttribute("popupMessage");
+                request.getSession().removeAttribute("popupType");
+            }
+        %>
     </body>
 
 </html>

@@ -19,8 +19,8 @@ public class Manager extends User{
         super();
     }
 
-    public Manager(String id, String email, String passwordHash, String role, String fullName, String phoneNumber) {
-        super(id, email, passwordHash, role, fullName, phoneNumber);
+    public Manager(String email, String passwordHash, String role, String fullName, String phoneNumber) {
+        super(email, passwordHash, role, fullName, phoneNumber);
     }
     
 }

@@ -19,8 +19,8 @@ public class Technician extends User {
         super();
     }
     
-    public Technician(String id, String email, String passwordHash, String role, String fullName, String phoneNumber) {
-        super(id, email, passwordHash, role, fullName, phoneNumber);
+    public Technician(String email, String passwordHash, String role, String fullName, String phoneNumber) {
+        super(email, passwordHash, role, fullName, phoneNumber);
     }
     
 }
