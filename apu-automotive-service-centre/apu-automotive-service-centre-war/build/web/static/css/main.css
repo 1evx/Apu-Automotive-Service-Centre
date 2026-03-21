@@ -59,15 +59,15 @@ Description: Fresheat food & Restaurant Html Template  <
   --body: #fff;
   --black: #000;
   --white: #fff;
-  --theme: #EB0029;
-  --theme2:#FC791A;
-  --title:#010F1C;
+  --theme: #2667FF;
+  --theme2: #2667FF;
+  --title: #010F1C;
   --dark: #222222;
   --text: #5C6574;
   --text2: #ababab;
   --bg: #02142A;
   --box-shadow: 0px 6px 30px 0px rgba(52, 55, 170, 0.15);
-  --bg2: #F4F1EA;
+  --bg2: #F4F1EA; /* back-to-top */
   --border: #373737;
   --border-2: #D2D2D1;
   --border-3: #ffffff17;
@@ -420,7 +420,7 @@ textarea.form-control:focus {
 .theme-btn.style6 {
   padding: 13px 40px;
   border-radius: 100px;
-  background-color: rgba(235, 0, 41, 0.1);
+  background-color: rgba(40, 80, 235, 0.1);
   color: var(--theme) !important;
   font-family: var(--title-font);
   font-size: 14px;
@@ -4135,7 +4135,7 @@ input.main-search-input::placeholder {
   margin-bottom: 20px;
 }
 .header-main .header-right .header__cart .header__right__dropdown__wrapper .dropdown__price span {
-  float: right;
+  /*float: right;*/
   color: var(--theme2);
   font-weight: 700;
 }
