@@ -146,6 +146,22 @@
         <script src="static/js/nice-select.min.js"></script>
         <!--<< Main.js >>-->
         <script src="static/js/main.js"></script>
+        
+        <%--
+        Check if the Servlet left a pop-up message for us in the session.
+        If it did, trigger a JavaScript alert and then delete the message so it doesn't repeat.
+        --%>
+        <%
+            String popupMessage = (String) request.getSession().getAttribute("popupMessage");
+            if (popupMessage != null) {
+        %> 
+        <script> alert("<%= popupMessage%>"); </script>
+        <%
+                // Clear the message from the session
+                request.getSession().removeAttribute("popupMessage");
+                request.getSession().removeAttribute("popupType");
+            }
+        %>
     </body>
 
 </html>
