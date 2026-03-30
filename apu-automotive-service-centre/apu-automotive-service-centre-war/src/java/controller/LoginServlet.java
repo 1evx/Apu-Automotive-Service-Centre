@@ -33,46 +33,63 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // Grab the inputs from your Bootstrap login.jsp form
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        response.setContentType("text/html;charset=UTF-8");
+        
+        try {
+            // 1. Grab the inputs from your login form
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
 
-        // Ask the EJB to check the database for these credentials
-        User user = userFacade.authenticate(email, password);
-
-        // Process the result
-        if (user != null) {
-            // Success! Create a session and save the user data for later use
-            HttpSession session = request.getSession();
-            session.setAttribute("currentUser", user);
-
-            // 4. Role-Based Routing using JPA Inheritance
-            if (user instanceof Manager) {
-                response.sendRedirect("manager_dashboard.jsp");
-                return; // CRITICAL: Stops execution to prevent Server Error 500
-                
-            } else if (user instanceof CounterStaff) {
-                response.sendRedirect("counter_dashboard.jsp");
-                return;
-                
-            } else if (user instanceof Technician) {
-                response.sendRedirect("technician_dashboard.jsp");
-                return;
-                
-            } else if (user instanceof Customer) {
-                response.sendRedirect("customer_dashboard.jsp");
-                return;
-                
-            } else {
-                // Fallback just in case a user has no defined role
-                response.sendRedirect("login.jsp?error=UnknownRole");
+            // 2. Basic Validation: Prevent empty submissions
+            if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+                request.getSession().setAttribute("popupMessage", "Please enter both your email and password.");
+                request.getSession().setAttribute("popupType", "warning");
+                response.sendRedirect("login.jsp");
                 return;
             }
-            
-        } else {
-            // Failure: User is null, meaning wrong email or password
-            response.sendRedirect("login.jsp?error=InvalidCredentials");
-            return;
+
+            // 3. Ask the EJB to check the database
+            User user = userFacade.authenticate(email, password);
+
+            // 4. Process the result
+            if (user != null) {
+                // Success! Create a session and save the user data
+                HttpSession session = request.getSession();
+                session.setAttribute("currentUser", user);
+                
+                // Set a "Welcome" pop-up for when they arrive at their dashboard!
+                session.setAttribute("popupMessage", "Welcome back, " + user.getFullName() + "!");
+                session.setAttribute("popupType", "success");
+
+                // Role-Based Routing
+                if (user instanceof Manager) {
+                    response.sendRedirect("manager_dashboard.jsp");
+                } else if (user instanceof CounterStaff) {
+                    response.sendRedirect("counter_dashboard.jsp");
+                } else if (user instanceof Technician) {
+                    response.sendRedirect("technician_dashboard.jsp");
+                } else if (user instanceof Customer) {
+                    response.sendRedirect("customer_dashboard.jsp");
+                } else {
+                    // Fallback for missing roles
+                    session.setAttribute("popupMessage", "Login Error: Unknown User Role.");
+                    session.setAttribute("popupType", "error");
+                    response.sendRedirect("login.jsp");
+                }
+                
+            } else {
+                // Failure: Wrong email or password
+                request.getSession().setAttribute("popupMessage", "Login Failed: Invalid email or password.");
+                request.getSession().setAttribute("popupType", "error");
+                response.sendRedirect("login.jsp");
+            }
+
+        } catch (Exception e) {
+            // 5. The Safety Net: Catch database or server crashes
+            e.printStackTrace();
+            request.getSession().setAttribute("popupMessage", "A server error occurred during login. Please try again.");
+            request.getSession().setAttribute("popupType", "error");
+            response.sendRedirect("login.jsp");
         }
     }
 }

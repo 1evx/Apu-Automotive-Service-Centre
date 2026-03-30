@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @author TPY
  */
 @Entity
-@Table(name = "USERS")
+@Table(name = "USERS" ,schema = "APP")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Use one table for all user types
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 
