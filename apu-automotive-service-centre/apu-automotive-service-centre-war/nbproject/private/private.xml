@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/web/index.jsp</file>
-            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/web/login.jsp</file>
+            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/web/manager_dashboard.jsp</file>
+            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/UpdateStaffServlet.java</file>
             <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/LoginServlet.java</file>
-            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/web/customer_dashboard.jsp</file>
             <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/RegisterServlet.java</file>
-            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/web/about.jsp</file>
-            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/web/static/css/main.css</file>
         </group>
     </open-files>
 </project-private>

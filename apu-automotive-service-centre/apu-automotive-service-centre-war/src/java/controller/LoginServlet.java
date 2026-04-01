@@ -73,7 +73,15 @@ public class LoginServlet extends HttpServlet {
 
                 // Role-Based Routing
                 if (user instanceof Manager) {
+                    
+                    List<User> staffList = userFacade.getAllStaff();
+                    List<Feedback> allFeedbackList = FeedbackFacade.getAllFeedback();
+                    
+                    session.setAttribute("staffList", staffList);
+                    session.setAttribute("allFeedbackList", allFeedbackList);
+                    
                     response.sendRedirect("manager_dashboard.jsp");
+                    
                 } else if (user instanceof CounterStaff) {
                     response.sendRedirect("counter_dashboard.jsp");
                 } else if (user instanceof Technician) {
@@ -82,11 +90,9 @@ public class LoginServlet extends HttpServlet {
                     
                     Customer customer = (Customer) user;
                     
-                    // 1. PRE-LOAD DATA FOR THE DASHBOARD TABS
                     List<Appointment> historyList = AppointmentFacade.getAppointmentsByCustomer(customer);
                     List<Feedback> feedbackList = FeedbackFacade.getFeedbackByCustomer(customer);
                     
-                    // 2. SAVE THE LISTS TO THE SESSION
                     session.setAttribute("historyList", historyList);
                     session.setAttribute("feedbackList", feedbackList);
                     response.sendRedirect("customer_dashboard.jsp");

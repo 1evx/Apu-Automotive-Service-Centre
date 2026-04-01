@@ -61,8 +61,8 @@
         <jsp:include page="component/offcanvas.jsp" />
 
         
-       <!-- Header Section Start -->
-        <jsp:include page="component/navbar.jsp" />
+        <!-- Header Section Start -->
+        <jsp:include page="component/dashboardNavbar.jsp" />
 
 
         <!-- Search Area Start -->

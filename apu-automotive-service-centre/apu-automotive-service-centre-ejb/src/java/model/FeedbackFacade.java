@@ -34,4 +34,10 @@ public class FeedbackFacade extends AbstractFacade<Feedback> {
             .setParameter("cust", customer)
             .getResultList();
     }
+    
+    public List<model.Feedback> getAllFeedback() {
+        return getEntityManager().createQuery(
+            "SELECT f FROM Feedback f ORDER BY f.submissionDate DESC", model.Feedback.class)
+            .getResultList();
+    }
 }

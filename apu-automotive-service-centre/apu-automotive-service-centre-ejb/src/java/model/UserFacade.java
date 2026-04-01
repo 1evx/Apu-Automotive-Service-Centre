@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -77,6 +78,12 @@ public class UserFacade extends AbstractFacade<User> {
             System.err.println("Login Query Failed: " + e.getMessage());
             return null;
         }
+    }
+    
+    public List<model.User> getAllStaff() {
+        return getEntityManager().createQuery(
+            "SELECT u FROM User u WHERE TYPE(u) <> Customer", model.User.class)
+            .getResultList();
     }
     
 }
