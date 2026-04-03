@@ -452,6 +452,19 @@ textarea.form-control:focus {
 .theme-btn.style6:hover i {
   color: var(--white);
 }
+.theme-btn.sidebar-btn {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+.theme-btn.sidebar-btn i {
+    width: 20px;
+    text-align: center;
+    margin-right: 8px;
+}
 @media (max-width: 767px) {
   .theme-btn {
     padding: 20px 32px;

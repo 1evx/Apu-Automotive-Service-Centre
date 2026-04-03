@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="zxx">
     <!--<< Header Area >>-->
@@ -146,6 +148,17 @@
         <script src="static/js/nice-select.min.js"></script>
         <!--<< Main.js >>-->
         <script src="static/js/main.js"></script>
+        
+        <%--
+        Check if the Servlet left a pop-up message for us in the session.
+        If it did, trigger a JavaScript alert and then delete the message so it doesn't repeat.
+        --%>
+        <c:if test="${not empty sessionScope.popupMessage}">
+            <script> alert("${sessionScope.popupMessage}"); </script>
+            <%-- Clear the messages from the session --%>
+            <c:remove var="popupMessage" scope="session" />
+            <c:remove var="popupType" scope="session" />
+        </c:if>
     </body>
 
 </html>

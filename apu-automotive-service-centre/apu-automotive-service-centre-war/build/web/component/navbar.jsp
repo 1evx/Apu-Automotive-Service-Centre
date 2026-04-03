@@ -21,10 +21,9 @@
                     <div class="main-header-items">
                         <div class="header-top-wrapper-2">
                             <div class="text-white top-text">Welcome To Asia Pacific University</div>
-                            <div class="text-white top-text"><i class="fa-solid fa-location-dot me-3"></i> Jalan Teknologi 5, Taman Teknologi Malaysia, Kuala Lumpur</div>
+                                    <div class="text-white top-text"><i class="fa-solid fa-location-dot me-3">
+                                </i> Jalan Teknologi 5, Taman Teknologi Malaysia, Kuala Lumpur</div>
                             <div class="social-icon d-flex align-items-center">
-                                <div class="text-white pe-2 top-text"><i class="fa-solid fa-user me-3"></i> Login / Register
-                                </div>
                                 <span class="text-white top-text">Follow Us:</span>
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                                 <a href="#"><i class="fab fa-twitter"></i></a>
@@ -61,7 +60,7 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="shop.html">
+                                                            <a href="service.jsp">
                                                                 Service
                                                             </a>
                                                         </li>
@@ -152,7 +151,7 @@
                                             </div>
                                         </div>
 
-                                        <a class="theme-btn" href="menu.html">ORDER NOW <i
+                                        <a class="theme-btn" href="login.jsp">Login <i
                                                 class="fa-sharp fa-regular fa-arrow-right"></i></a>
                                         <div class="header__hamburger d-xl-block my-auto">
                                             <div class="sidebar__toggle">

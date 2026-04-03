@@ -13,7 +13,7 @@
                 <div class="offcanvas__content">
                     <div class="offcanvas__top mb-5 d-flex justify-content-between align-items-center">
                         <div class="offcanvas__logo">
-                            <a href="index.html">
+                            <a href="index.jsp">
                             <img src="static/img/logo/logo.svg" alt="logo-img">
                             </a>
                         </div>
@@ -24,7 +24,8 @@
                         </div>
                     </div>
                     <p class="text d-none d-lg-block">
-                        This involves interactions between a business and its customers. It's about meeting customers' needs and resolving their problems. Effective customer service is crucial.
+                        APU is one of Malaysia's premier private universities, where students are transformed into highly skilled, employable, 
+                        and future-proof professionals via a unique blend of technology, innovation, and creativity.
                     </p>
                     <div class="offcanvas-gallery-area d-none d-xl-block">
                         <div class="offcanvas-gallery-items">
@@ -59,7 +60,7 @@
                                     <i class="fal fa-map-marker-alt"></i>
                                 </div>
                                 <div class="offcanvas__contact-text">
-                                    <a target="_blank" href="#">Main Street, Melbourne, Australia</a>
+                                    <a target="_blank" href="service.jsp">Kuala Lumpur, Malaysia</a>
                                 </div>
                             </li>
                             <li class="d-flex align-items-center">
@@ -67,7 +68,7 @@
                                     <i class="fal fa-envelope"></i>
                                 </div>
                                 <div class="offcanvas__contact-text">
-                                    <a href="tel:+013-003-003-9993"><span class="mailto:info@enofik.com">info@fresheat.com</span></a>
+                                    <a href="tel:+013-003-003-9993"><span class="mailto:info@enofik.com">https://www.apu.edu.my/</span></a>
                                 </div>
                             </li>
                             <li class="d-flex align-items-center">
@@ -75,7 +76,7 @@
                                     <i class="fal fa-clock"></i>
                                 </div>
                                 <div class="offcanvas__contact-text">
-                                    <a target="_blank" href="#">Mod-friday, 09am -05pm</a>
+                                    <a target="_blank" href="service.jsp">Monday-Friday, 09am-05pm</a>
                                 </div>
                             </li>
                             <li class="d-flex align-items-center">
@@ -83,15 +84,15 @@
                                     <i class="far fa-phone"></i>
                                 </div>
                                 <div class="offcanvas__contact-text">
-                                    <a href="tel:+11002345909">+11002345909</a>
+                                    <a href="tel:+11002345909">011002345909</a>
                                 </div>
                             </li>
                         </ul>
                         <div class="header-button mt-4">
-                            <a href="shop.html" class="theme-btn">
+                            <a href="login.jsp" class="theme-btn">
                             <span class="button-content-wrapper d-flex align-items-center justify-content-center">
                             <span class="button-icon"><i class="fa-sharp fa-regular fa-cart-shopping bg-transparent text-white me-2"></i></span>
-                            <span class="button-text">ORDER NOW</span>
+                            <span class="button-text">LOGIN NOW</span>
                             </span>
                             </a>
                         </div>

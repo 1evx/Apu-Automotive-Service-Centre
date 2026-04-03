@@ -27,4 +27,15 @@ public class TechnicianFacade extends AbstractFacade<Technician> {
         super(Technician.class);
     }
     
+    public model.ServiceType findByServiceName(String name) {
+        try {
+            return (model.ServiceType) getEntityManager().createQuery(
+                "SELECT s FROM ServiceType s WHERE s.serviceName = :name")
+                .setParameter("name", name)
+                .getSingleResult();
+        } catch (javax.persistence.NoResultException e) {
+            return null; // Returns null if the service hasn't been created yet
+        }
+    }
+    
 }

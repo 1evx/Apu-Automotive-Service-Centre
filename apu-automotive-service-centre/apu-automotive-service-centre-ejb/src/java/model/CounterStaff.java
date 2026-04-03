@@ -7,6 +7,7 @@ package model;
 import java.io.Serializable;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  *
@@ -14,8 +15,9 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("COUNTER_STAFF") 
+@Table(name = "COUNTER_STAFF", schema = "APP")
 public class CounterStaff extends SystemUser implements Serializable {
-
+    
     private String shiftType;
 
     // 1. Empty Constructor
@@ -24,8 +26,8 @@ public class CounterStaff extends SystemUser implements Serializable {
     }
 
     // 2. Full Constructor
-    public CounterStaff(String username, String email, String passwordHash, String name, String phoneNumber, String icNumber, String shiftType) {
-        super(username, email, passwordHash, name, phoneNumber, icNumber);
+    public CounterStaff(String username, String email, String passwordHash, String fullname, String phoneNumber, String icNumber, String shiftType, String address) {
+        super(username, email, passwordHash, fullname, phoneNumber, icNumber, address);
         this.shiftType = shiftType;
     }
 

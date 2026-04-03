@@ -7,6 +7,7 @@ package model;
 import java.io.Serializable;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  *
@@ -14,10 +15,12 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("TECHNICIAN") 
+@Table(name = "TECHNICIAN", schema = "APP")
 public class Technician extends SystemUser implements Serializable {
 
     private String specialization;
     private boolean isAvailable;
+
 
     public Technician() {
         super();
@@ -25,9 +28,9 @@ public class Technician extends SystemUser implements Serializable {
     }
 
     // The Full Constructor
-    public Technician(String username, String email, String passwordHash, String name, String phoneNumber, String icNumber, String specialization) {
+    public Technician(String username, String email, String passwordHash, String name, String phoneNumber, String icNumber, String specialization, String address) {
         // Send the core user data UP to SystemUser
-        super(username, email, passwordHash, name, phoneNumber, icNumber);
+        super(username, email, passwordHash, name, phoneNumber, icNumber, address);
         
         // Set the specific Technician data
         this.specialization = specialization;
