@@ -39,6 +39,9 @@ public abstract class SystemUser implements Serializable {
     // JPA will fill it using the Discriminator, but won't crash trying to save it twice!
     @Column(name = "role", insertable = false, updatable = false)
     private String role;
+    
+    @Column(nullable = false)
+    private boolean isActive = true;
 
     private String fullname;
     private String phoneNumber;
@@ -135,6 +138,15 @@ public abstract class SystemUser implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+    
     
     
 }

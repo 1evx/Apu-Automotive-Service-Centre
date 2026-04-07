@@ -35,7 +35,7 @@ public class Appointment implements Serializable {
     private String carPlateNumber; 
 
     @Column(nullable = false)
-    private String status; // "Pending", "Approved", "In Progress", "Completed", "Cancelled"
+    private String status; // "Scheduled", "In Progress", "Completed", "Cancelled"
 
     @Column(length = 500)
     private String remarks;
@@ -150,7 +150,7 @@ public class Appointment implements Serializable {
     public void setTechnician(Technician technician) {
         this.technician = technician;
     }
-
+     
     // ==========================================
     // DEFAULT JPA METHODS
     // ==========================================

@@ -5,7 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.CounterStaff;
-
-import model.Manager;
-import model.Technician;
-import model.SystemUser;
-import model.SystemUserFacade;
+import model.*;
 /**
  *
  * @author TPY
@@ -36,74 +30,85 @@ public class UpdateStaffServlet extends HttpServlet {
         HttpSession session = request.getSession();
         SystemUser currentUser = (SystemUser) session.getAttribute("currentUser");
         
-        // SECURITY CHECK: Only Managers!
-        if (currentUser == null || !(currentUser instanceof Manager)) {
-            session.setAttribute("popupMessage", "Security Alert: Only Managers can update staff.");
+        // 1. UPDATE THE BOUNCER: Allow both Manager and SuperManager in
+        if (currentUser == null || (!(currentUser instanceof Manager) && !(currentUser instanceof SuperManager))) {
+            session.setAttribute("popupMessage", "Security Alert: Only authorized management can update staff.");
             session.setAttribute("popupType", "error");
             response.sendRedirect("login.jsp");
             return;
         }
 
         try {
-            // Grab the updated data from the Modal
+            // 2. Grab general form data
             Long staffId = Long.parseLong(request.getParameter("staffId"));
             String fullName = request.getParameter("fullName");
             String email = request.getParameter("email");
-            String newRole = request.getParameter("role"); // Grab the new dropdown value
+            String username = request.getParameter("username");
+            String icNumber = request.getParameter("icNumber");
+            String phoneNumber = request.getParameter("phoneNumber");
+            String address = request.getParameter("address");
+            boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
 
-            // Find the exact user in the database
             SystemUser staffToUpdate = SystemUserFacade.find(staffId);
-            
+
             if (staffToUpdate != null) {
                 
-                // Get their current Java Class name (e.g., "Manager" or "Technician")
-                String currentRole = staffToUpdate.getClass().getSimpleName();
-
-                if (!currentRole.equals(newRole)) {
-                    SystemUser newStaff = null;
-                    switch (newRole) {
-                        case "Manager":
-                            newStaff = new Manager();
-                            break;
-                        case "CounterStaff":
-                            newStaff = new CounterStaff();
-                            break;
-                        case "Technician":
-                            newStaff = new Technician();
-                            break;
-                    }
-
-                    newStaff.setFullName(fullName);
-                    newStaff.setEmail(email);
-                    newStaff.setPasswordHash(staffToUpdate.getPasswordHash());
-                    
-                    SystemUserFacade.remove(staffToUpdate); 
-                    SystemUserFacade.create(newStaff);
-                    
-                } else {
-                    staffToUpdate.setFullName(fullName);
-                    staffToUpdate.setEmail(email);
-                    SystemUserFacade.edit(staffToUpdate);
+                // ---------------------------------------------------------
+                // 3. CRITICAL SECURITY CHECK (Privilege Escalation Prevention)
+                // If the target is a SuperManager, but the user clicking "Save" is NOT a SuperManager... KICK THEM OUT!
+                // ---------------------------------------------------------
+                if (staffToUpdate instanceof SuperManager && !(currentUser instanceof SuperManager)) {
+                    session.setAttribute("popupMessage", "CRITICAL SECURITY ALERT: You do not have clearance to modify a Super Manager account.");
+                    session.setAttribute("popupType", "error");
+                    response.sendRedirect("ManagerDashboardServlet#manage-staff");
+                    return; // STOP EXECUTION IMMEDIATELY!
                 }
 
-                List<SystemUser> updatedStaffList = SystemUserFacade.getAllStaff();
-                session.setAttribute("staffList", updatedStaffList);
+                // 4. Update General Fields
+                staffToUpdate.setFullName(fullName);
+                staffToUpdate.setEmail(email);
+                staffToUpdate.setUsername(username);
+                staffToUpdate.setIcNumber(icNumber);
+                staffToUpdate.setPhoneNumber(phoneNumber);
+                staffToUpdate.setAddress(address);
+                staffToUpdate.setIsActive(isActive);
 
-                session.setAttribute("popupMessage", "Profile for " + fullName + " was successfully updated!");
+                // 5. Update Role-Specific Fields Safely
+                if (staffToUpdate instanceof SuperManager) { // ADDED SUPER MANAGER LOGIC
+                    String clearance = request.getParameter("masterClearance");
+                    if (clearance != null && !clearance.trim().isEmpty()) {
+                        ((SuperManager) staffToUpdate).setMasterClearance(clearance);
+                    }
+                } else if (staffToUpdate instanceof Manager) {
+                    ((Manager) staffToUpdate).setOfficeLocation(request.getParameter("officeLocation"));
+                } else if (staffToUpdate instanceof Technician) {
+                    ((Technician) staffToUpdate).setSpecialization(request.getParameter("specialization"));
+                } else if (staffToUpdate instanceof CounterStaff) {
+                    ((CounterStaff) staffToUpdate).setShiftType(request.getParameter("shiftType"));
+                }
+
+                // 6. Save to Database
+                SystemUserFacade.edit(staffToUpdate);
+
+                // Check if they just updated themselves, and refresh their session if they did!
+                if (currentUser.getUserId().equals(staffToUpdate.getUserId())) {
+                    session.setAttribute("currentUser", staffToUpdate);
+                }
+
+                session.setAttribute("popupMessage", "Staff record updated successfully!");
                 session.setAttribute("popupType", "success");
-                
             } else {
                 session.setAttribute("popupMessage", "Update Error: Staff member not found.");
                 session.setAttribute("popupType", "error");
             }
             
-            response.sendRedirect("manager_dashboard.jsp#manage-staff");
-
+            response.sendRedirect("ManagerDashboardServlet#manage-staff");
+            
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("popupMessage", "An error occurred while trying to update the profile.");
             session.setAttribute("popupType", "error");
-            response.sendRedirect("manager_dashboard.jsp#manage-staff");
+            response.sendRedirect("ManagerDashboardServlet#manage-staff");
         }
     }
 }

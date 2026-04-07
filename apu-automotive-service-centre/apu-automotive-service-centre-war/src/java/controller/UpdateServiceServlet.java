@@ -44,10 +44,10 @@ public class UpdateServiceServlet extends HttpServlet {
             return;
         }
 
-try {
+        try {
             Long serviceId = Long.parseLong(request.getParameter("serviceTypeId"));
             String newName = request.getParameter("serviceName");
-            String newDescription = request.getParameter("description"); // GRAB TEXT
+            String newDescription = request.getParameter("description"); 
             double newPrice = Double.parseDouble(request.getParameter("price"));
             int newDuration = Integer.parseInt(request.getParameter("durationHours"));
 
@@ -59,19 +59,20 @@ try {
                 if (duplicateCheck != null && !duplicateCheck.getId().equals(serviceId)) {
                     session.setAttribute("popupMessage", "Update Failed: A service named '" + newName + "' already exists.");
                     session.setAttribute("popupType", "error");
-                    response.sendRedirect("manager_dashboard.jsp#service-pricing");
+                    // CORRECTED REDIRECT
+                    response.sendRedirect("ManagerDashboardServlet#service-pricing");
                     return;
                 }
                 
                 serviceToUpdate.setName(newName);
-                serviceToUpdate.setDescription(newDescription); // SAVE TEXT
+                serviceToUpdate.setDescription(newDescription); 
                 serviceToUpdate.setPrice(newPrice);
                 serviceToUpdate.setDurationHours(newDuration);
                 
                 serviceTypeFacade.edit(serviceToUpdate);
 
-                List<ServiceType> updatedServiceList = serviceTypeFacade.findAll();
-                session.setAttribute("serviceList", updatedServiceList);
+                // REMOVED: Manual session updates.
+                // The ManagerDashboardServlet will handle fetching the fresh serviceList automatically!
 
                 session.setAttribute("popupMessage", "Success! " + newName + " has been successfully updated.");
                 session.setAttribute("popupType", "success");
@@ -80,13 +81,16 @@ try {
                 session.setAttribute("popupType", "error");
             }
             
-            response.sendRedirect("manager_dashboard.jsp#service-pricing");
+            // CORRECTED REDIRECT
+            response.sendRedirect("ManagerDashboardServlet#service-pricing");
 
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("popupMessage", "An error occurred while trying to update the service.");
             session.setAttribute("popupType", "error");
-            response.sendRedirect("manager_dashboard.jsp#service-pricing");
+            
+            // CORRECTED REDIRECT
+            response.sendRedirect("ManagerDashboardServlet#service-pricing");
         }
     }
 }

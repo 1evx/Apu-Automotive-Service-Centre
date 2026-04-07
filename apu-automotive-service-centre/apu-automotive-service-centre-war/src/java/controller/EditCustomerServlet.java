@@ -63,6 +63,6 @@ public class EditCustomerServlet extends HttpServlet {
         }
 
         // Send them right back to the customer table
-        response.sendRedirect("counterStaff_dashboard.jsp#manage-customers");
+        response.sendRedirect("CounterStaffDashboardServlet#manage-customers");
     }
 }

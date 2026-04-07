@@ -68,6 +68,6 @@ public class RegisterCustomerServlet extends HttpServlet {
         }
 
         // 7. Redirect the user back exactly to the Customers tab
-        response.sendRedirect("counterStaff_dashboard.jsp#manage-customers");
+        response.sendRedirect("CounterStaffDashboardServlet#manage-customers");
     }
 }

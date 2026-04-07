@@ -5,6 +5,7 @@
 package model;
 
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -61,7 +62,7 @@ public class SystemUserFacade extends AbstractFacade<SystemUser> {
     public SystemUser authenticate(String email, String password) {
         try {
             // FIXED: Changed u.password to u.passwordHash to match your Entity variable
-            String jpql = "SELECT u FROM SystemUser u WHERE u.email = :email AND u.passwordHash = :password";
+            String jpql = "SELECT u FROM SystemUser u WHERE u.email = :email AND u.passwordHash = :password AND u.isActive = true";
 
             TypedQuery<SystemUser> query = em.createQuery(jpql, SystemUser.class);
             query.setParameter("email", email);
@@ -78,9 +79,42 @@ public class SystemUserFacade extends AbstractFacade<SystemUser> {
         }
     }
     
+    @PermitAll
     public List<model.SystemUser> getAllStaff() {
         return getEntityManager().createQuery(
-            "SELECT u FROM SystemUser u WHERE TYPE(u) <> Customer", model.SystemUser.class)
+            "SELECT u FROM SystemUser u WHERE TYPE(u) <> Customer AND u.isActive = true", model.SystemUser.class)
             .getResultList();
+    }
+    
+    @PermitAll
+    public List<Object[]> runAIGeneratedQuery(String sql) throws Exception {
+        List<Object[]> results = new java.util.ArrayList<>();
+        
+        // Unwrap the raw JDBC Connection from JPA so we can read Column Metadata!
+        java.sql.Connection conn = getEntityManager().unwrap(java.sql.Connection.class);
+        
+        try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = stmt.executeQuery()) {
+             
+            java.sql.ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            
+            // 1. Grab the Column Names and save them as the FIRST row
+            String[] headers = new String[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                headers[i-1] = metaData.getColumnLabel(i); // Gets the AI's "AS" alias
+            }
+            results.add(headers); 
+            
+            // 2. Grab all the actual data rows
+            while (rs.next()) {
+                Object[] row = new Object[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    row[i-1] = rs.getObject(i);
+                }
+                results.add(row);
+            }
+        }
+        return results;
     }
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import java.io.IOException;
@@ -11,10 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-/**
- *
- * @author TPY
- */
+
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/LogoutServlet"})
 public class LogoutServlet extends HttpServlet {
 
@@ -27,7 +20,12 @@ public class LogoutServlet extends HttpServlet {
         
         // 2. If a session exists, completely destroy it and everything inside it
         if (session != null) {
-            session.invalidate();
+            try {
+                session.invalidate();
+            } catch (IllegalStateException e) {
+                // THE FIX: Catch and ignore the GlassFish WELD-000227 hot-deploy bug!
+                System.out.println("Ignored GlassFish session bug during logout.");
+            }
         }
         
         // 3. Create a brand new, empty session strictly to hold our popup message

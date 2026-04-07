@@ -5,7 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,7 +28,6 @@ public class DeleteServiceServlet extends HttpServlet {
     @EJB
     private ServiceTypeFacade serviceTypeFacade;
 
-    // Use doGet because the delete button is an standard <a> hyperlink!
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,7 +35,6 @@ public class DeleteServiceServlet extends HttpServlet {
         HttpSession session = request.getSession();
         SystemUser currentUser = (SystemUser) session.getAttribute("currentUser");
         
-        // 1. SECURITY CHECK: Managers Only
         if (currentUser == null || !(currentUser instanceof Manager)) {
             session.setAttribute("popupMessage", "Security Alert: Only Managers can delete services.");
             session.setAttribute("popupType", "error");
@@ -46,39 +43,30 @@ public class DeleteServiceServlet extends HttpServlet {
         }
 
         try {
-            // 2. Grab the ID from the URL (e.g., ?id=5)
             Long serviceId = Long.valueOf(request.getParameter("id"));
-
-            // 3. Find the service
             ServiceType serviceToDelete = serviceTypeFacade.find(serviceId);
             
             if (serviceToDelete != null) {
-                String deletedName = serviceToDelete.getName(); // Save name for the success message
+                String deletedName = serviceToDelete.getName(); 
                 
-                // 4. Delete it from the database
-                serviceTypeFacade.remove(serviceToDelete);
+                // --- THE SOFT DELETE ---
+                serviceToDelete.setIsActive(false);
+                serviceTypeFacade.edit(serviceToDelete);
 
-                // 5. Refresh the Dashboard Data
-                List<ServiceType> updatedServiceList = serviceTypeFacade.findAll();
-                session.setAttribute("serviceList", updatedServiceList);
-
-                session.setAttribute("popupMessage", "Success! " + deletedName + " has been permanently deleted.");
+                session.setAttribute("popupMessage", "Success! " + deletedName + " has been removed.");
                 session.setAttribute("popupType", "success");
             } else {
                 session.setAttribute("popupMessage", "Delete Error: Service not found in the database.");
                 session.setAttribute("popupType", "error");
             }
             
-            response.sendRedirect("manager_dashboard.jsp#service-pricing");
+            response.sendRedirect("ManagerDashboardServlet#service-pricing");
 
         } catch (Exception e) {
             e.printStackTrace();
-            
-            // FOREIGN KEY CONSTRAINT WARNING!
-            // If the database refuses to delete it because a customer already booked it:
-            session.setAttribute("popupMessage", "Cannot delete this service! It is currently linked to existing customer appointments.");
+            session.setAttribute("popupMessage", "An error occurred while trying to deactivate this service.");
             session.setAttribute("popupType", "error");
-            response.sendRedirect("manager_dashboard.jsp#service-pricing");
+            response.sendRedirect("ManagerDashboardServlet#service-pricing");
         }
     }
 }

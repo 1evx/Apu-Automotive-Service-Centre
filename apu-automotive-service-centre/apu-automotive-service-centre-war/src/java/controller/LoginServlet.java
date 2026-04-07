@@ -14,15 +14,20 @@ import model.Appointment;
 import model.AppointmentFacade;
 import model.CounterStaff;
 import model.Customer;
+import model.CustomerFacade;
 import model.Feedback;
 import model.FeedbackFacade;
 import model.Manager;
+import model.Payment;
+import model.PaymentFacade;
 import model.ServiceType;
 import model.ServiceTypeFacade;
 import model.SuperManager;
 import model.Technician;
 import model.SystemUser;
 import model.SystemUserFacade;
+import model.Comment;
+import model.CommentFacade;
 
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
@@ -41,7 +46,13 @@ public class LoginServlet extends HttpServlet {
     private ServiceTypeFacade ServiceTypeFacade;
     
     @EJB
-    private model.CustomerFacade CustomerFacade;
+    private CustomerFacade CustomerFacade;
+    
+    @EJB
+    private PaymentFacade PaymentFacade;
+    
+    @EJB
+    private CommentFacade CommentFacade;
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +61,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         try {
-            String email = request.getParameter("email");
+            String email = request.getParameter("email").trim().toLowerCase();
             String password = request.getParameter("password");
 
             if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
@@ -69,39 +80,48 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("popupType", "success");
 
                 // Role-Based Routing
-                if (user instanceof Manager) {
-                    
-                    List<SystemUser> staffList = SystemUserFacade.getAllStaff();
-                    List<Feedback> allFeedbackList = FeedbackFacade.findAll();
-                    List<ServiceType> serviceList = ServiceTypeFacade.findAll();
-                    
-                    session.setAttribute("staffList", staffList);
-                    session.setAttribute("allFeedbackList", allFeedbackList);
-                    session.setAttribute("serviceList", serviceList);
-                    
-                    response.sendRedirect("manager_dashboard.jsp");
-                    
-                } else if (user instanceof CounterStaff) {
-                    // Fetch all customers from the database
-                    List<Customer> customerList = CustomerFacade.findAll();
+                if (user instanceof Manager || user instanceof SuperManager) {
     
-                    // Save them to the session so the dashboard can print them
-                    session.setAttribute("customerList", customerList);
-                    
-                    response.sendRedirect("counterStaff_dashboard.jsp");
-                    
+                    // Set the specific role so the rest of the system knows who they are
+                    if (user instanceof SuperManager) {
+                        session.setAttribute("role", "SUPER_MANAGER");
+                    } else {
+                        session.setAttribute("role", "Manager");
+                    }
+
+                    // Send BOTH of them to the exact same dashboard
+                    response.sendRedirect("ManagerDashboardServlet");
+                }else if (user instanceof CounterStaff) {
+                    response.sendRedirect("CounterStaffDashboardServlet");
                 } else if (user instanceof Technician) {
-                    response.sendRedirect("technician_dashboard.jsp");
+//                    Technician tech = (Technician) user;
+//                    
+//                    // Fetch only THIS technician's tasks
+//                    List<Appointment> myTasks = AppointmentFacade.findByTechnician(tech);
+//                    List<Comment> allComments = CommentFacade.findAll();
+//                    List<Comment> myComments = new java.util.ArrayList<>();
+//                    
+//                    for (Comment c : allComments) {
+//                        // Only add the comment if it belongs to an appointment assigned to this technician
+//                        if (c.getAppointment().getTechnician().getUserId().equals(tech.getUserId())) {
+//                            myComments.add(c);
+//                    }
+//}
+//                    session.setAttribute("myComments", myComments);
+//                    session.setAttribute("myTasks", myTasks);
+                    
+                    response.sendRedirect("TechnicianDashboardServlet");
                 } else if (user instanceof Customer) {
-                    
-                    Customer customer = (Customer) user;
-                    
-                    List<Appointment> historyList = AppointmentFacade.getAppointmentsByCustomer(customer);
-                    List<Feedback> feedbackList = FeedbackFacade.getFeedbackByCustomer(customer);
-                    
-                    session.setAttribute("historyList", historyList);
-                    session.setAttribute("feedbackList", feedbackList);
-                    response.sendRedirect("customer_dashboard.jsp");
+//                    Customer customer = (Customer) user;
+//                    
+//                    List<Appointment> myAppointments = AppointmentFacade.getAppointmentsByCustomer(customer);
+//                    List<Feedback> myFeedback = FeedbackFacade.getFeedbackByCustomer(customer);
+//                    List<Comment> myComments = CommentFacade.getCommentsByCustomer(customer);
+//                    
+//                    session.setAttribute("myAppointments", myAppointments);
+//                    session.setAttribute("myFeedback", myFeedback);
+//                    session.setAttribute("myComments", myComments);
+                    response.sendRedirect("CustomerDashboardServlet#current-appointments");
                     
                 } else {
                     // Fallback for missing roles

@@ -34,6 +34,9 @@ private static final long serialVersionUID = 1L;
     // NEW FIELD ADDED HERE
     @Column(nullable = false)
     private Integer durationHours;
+    
+    @Column(nullable = false)
+    private boolean isActive = true;
 
     public ServiceType() {
     }
@@ -84,6 +87,14 @@ private static final long serialVersionUID = 1L;
 
     public void setDurationHours(Integer durationHours) {
         this.durationHours = durationHours;
+    }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     @Override

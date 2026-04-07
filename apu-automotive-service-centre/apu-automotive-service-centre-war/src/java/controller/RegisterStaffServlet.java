@@ -5,7 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +17,7 @@ import model.CounterStaff;
 import model.Manager;
 import model.Technician;
 import model.SystemUser;
+import model.SuperManager;
 import model.SystemUserFacade;
 
 /**
@@ -38,62 +38,83 @@ public class RegisterStaffServlet extends HttpServlet {
         HttpSession session = request.getSession();
         SystemUser currentUser = (SystemUser) session.getAttribute("currentUser");
         
-        // SECURITY CHECK: Ensure only logged-in Managers can do this
-        if (currentUser == null || !(currentUser instanceof Manager)) {
-            session.setAttribute("popupMessage", "Security Alert: Only Managers can register new staff.");
+        // 1. UPDATE THE BOUNCER: Allow BOTH Manager and SuperManager to access this Servlet
+        if (currentUser == null || (!(currentUser instanceof Manager) && !(currentUser instanceof SuperManager))) {
+            session.setAttribute("popupMessage", "Security Alert: Only authorized management can register new staff.");
             session.setAttribute("popupType", "error");
             response.sendRedirect("login.jsp");
             return;
         }
 
         try {
-            // Grab the data from the Modal form
+            // 1. Grab all standard data from the Modal
             String role = request.getParameter("role");
             String fullName = request.getParameter("fullName");
+            String username = request.getParameter("username"); 
             String email = request.getParameter("email");
+            String icNumber = request.getParameter("icNumber"); 
             String password = request.getParameter("password");
+            String phoneNumber = request.getParameter("phoneNumber"); 
+            String address = request.getParameter("address");         
 
-            // Create the Correct Object Based on the Dropdown Role
+            // 2. Create the Correct Object Based on the Dropdown Role
             SystemUser newStaff = null;
             switch (role) {
                 case "Manager":
+                    if (!(currentUser instanceof SuperManager)) {
+                        session.setAttribute("popupMessage", "Access Denied: Only a Super Manager can register new Managers.");
+                        session.setAttribute("popupType", "error");
+                        // Send them back to the dashboard where they came from
+                        response.sendRedirect("ManagerDashboardServlet#manage-staff");
+                        return; // Stop execution immediately!
+                    }
+                    
                     newStaff = new Manager();
+                    String officeLocation = request.getParameter("officeLocation");
+                    ((Manager) newStaff).setOfficeLocation(officeLocation);
                     break;
+                    
                 case "CounterStaff":
                     newStaff = new CounterStaff();
+                    String shiftType = request.getParameter("shiftType");
+                    ((CounterStaff) newStaff).setShiftType(shiftType != null ? shiftType : "Morning (8AM - 4PM)");
                     break;
+                    
                 case "Technician":
                     newStaff = new Technician();
+                    String specialization = request.getParameter("specialization");
+                    ((Technician) newStaff).setSpecialization(specialization != null && !specialization.isEmpty() ? specialization : "General Service");
+                    ((Technician) newStaff).setIsAvailable(true);
                     break;
+                    
                 default:
                     throw new IllegalArgumentException("Invalid role selected.");
             }
 
-            // Fill the object with the form data
+            // 3. Fill the object with the standard data
             newStaff.setFullName(fullName);
+            newStaff.setUsername(username); 
             newStaff.setEmail(email);
+            newStaff.setIcNumber(icNumber); 
+            newStaff.setPhoneNumber(phoneNumber); 
+            newStaff.setAddress(address);         
             newStaff.setPasswordHash(password);
+            newStaff.setIsActive(true); // Ensure they are active upon creation!
 
-            // Save the new staff member to the database!
-            // (NetBeans auto-generates the create() method inside AbstractFacade)
+            // 4. Save the new staff member to the database!
             SystemUserFacade.create(newStaff);
 
-            // INSTANT DASHBOARD REFRESH
-            // Ask the database for the new, updated list of staff and overwrite the old session list
-            List<SystemUser> updatedStaffList = SystemUserFacade.getAllStaff();
-            session.setAttribute("staffList", updatedStaffList);
-
-            // Send them back with a success message
             session.setAttribute("popupMessage", "Success! " + fullName + " has been registered as a " + role + ".");
             session.setAttribute("popupType", "success");
-            response.sendRedirect("manager_dashboard.jsp#manage-staff");
+            
+            response.sendRedirect("ManagerDashboardServlet#manage-staff");
 
         } catch (Exception e) {
             e.printStackTrace();
-            // If the database crashes (e.g., they used an email that already exists)
-            session.setAttribute("popupMessage", "Registration Failed. That email address might already be in use.");
+            session.setAttribute("popupMessage", "Registration Failed. The Email, Username, or IC Number might already be in use.");
             session.setAttribute("popupType", "error");
-            response.sendRedirect("manager_dashboard.jsp#manage-staff");
+            
+            response.sendRedirect("ManagerDashboardServlet#manage-staff");
         }
     }
 }

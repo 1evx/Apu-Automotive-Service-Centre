@@ -5,7 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,9 +42,9 @@ public class AddServiceServlet extends HttpServlet {
             return;
         }
 
-try {
+        try {
             String name = request.getParameter("serviceName");
-            String description = request.getParameter("description"); // GRAB TEXT
+            String description = request.getParameter("description"); 
             double price = Double.parseDouble(request.getParameter("price"));
             int durationHours = Integer.parseInt(request.getParameter("durationHours"));
 
@@ -54,30 +53,36 @@ try {
             if (existingService != null) {
                 session.setAttribute("popupMessage", "Error: A service named '" + name + "' already exists.");
                 session.setAttribute("popupType", "error");
-                response.sendRedirect("manager_dashboard.jsp#service-pricing");
+                
+                // CORRECTED: Redirect to the Dashboard Controller
+                response.sendRedirect("ManagerDashboardServlet#service-pricing");
                 return;
             }
 
             ServiceType newService = new ServiceType();
             newService.setName(name);
-            newService.setDescription(description); // SAVE TEXT
+            newService.setDescription(description); 
             newService.setPrice(price);
             newService.setDurationHours(durationHours);
 
             serviceTypeFacade.create(newService);
 
-            List<ServiceType> updatedServiceList = serviceTypeFacade.findAll();
-            session.setAttribute("serviceList", updatedServiceList);
+            // REMOVED: Manual session updates.
+            // The ManagerDashboardServlet will handle fetching the fresh serviceList automatically!
 
             session.setAttribute("popupMessage", "Success! " + name + " was added to the master catalog.");
             session.setAttribute("popupType", "success");
-            response.sendRedirect("manager_dashboard.jsp#service-pricing");
+            
+            // CORRECTED: Redirect to the Dashboard Controller
+            response.sendRedirect("ManagerDashboardServlet#service-pricing");
 
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("popupMessage", "An error occurred while trying to create the service.");
             session.setAttribute("popupType", "error");
-            response.sendRedirect("manager_dashboard.jsp#service-pricing");
+            
+            // CORRECTED: Redirect to the Dashboard Controller
+            response.sendRedirect("ManagerDashboardServlet#service-pricing");
         }
     }
 }

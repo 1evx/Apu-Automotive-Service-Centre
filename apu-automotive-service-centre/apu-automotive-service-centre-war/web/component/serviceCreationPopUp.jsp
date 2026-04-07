@@ -43,7 +43,7 @@
 
                     </div>
 
-                    <div class="modal-footer bg-light border-0">
+                    <div class="modal-footer border-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary px-4 fw-bold">Create Service</button>
                     </div>

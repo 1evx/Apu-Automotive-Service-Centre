@@ -80,9 +80,11 @@
                                             <input type="email" name="email" placeholder="Email" required>
                                         </div>
                                         <div class="col-12">
-                                            <div class="form-ctl">
-                                                <input type="password" name="password" placeholder="Password" required>
-                                                <div class="icon"><i class="fa-sharp fa-solid fa-eye-slash"></i></div>
+                                            <div class="form-ctl position-relative">
+                                                <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Password" required>
+                                                <div class="icon" style="cursor: pointer; position: absolute; right: 15px; top: 50%; transform: translateY(-50%);" onclick="toggleVisibility('loginPassword', 'loginEyeIcon')">
+                                                    <i id="loginEyeIcon" class="fa-sharp fa-solid fa-eye-slash text-muted"></i>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-6 form-group">
@@ -148,6 +150,24 @@
         <script src="static/js/nice-select.min.js"></script>
         <!--<< Main.js >>-->
         <script src="static/js/main.js"></script>
+        
+        <script>
+        // Toggle eye icon and password visibility for the login page
+        function toggleVisibility(inputId, iconId) {
+            const inputField = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye", "text-primary"); 
+            } else {
+                inputField.type = "password";
+                icon.classList.remove("fa-eye", "text-primary");
+                icon.classList.add("fa-eye-slash");
+            }
+        }
+    </script>
         
         <%--
         Check if the Servlet left a pop-up message for us in the session.

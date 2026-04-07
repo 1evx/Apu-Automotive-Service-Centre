@@ -29,18 +29,18 @@ public class RegisterServlet extends HttpServlet {
         
         try {
             // 1. Grab all form data
-            String email = request.getParameter("email");
+            String email = request.getParameter("email").trim().toLowerCase();
+            String username = request.getParameter("username").trim().toLowerCase();
             String password = request.getParameter("password");
-            String phoneNumber = request.getParameter("phone");
-            String username = request.getParameter("username"); 
-            String fullName = request.getParameter("fullName"); 
-            String icNumber = request.getParameter("icNumber"); 
-            String address = request.getParameter("address");
+            String phoneNumber = request.getParameter("phone").trim(); 
+            String fullName = request.getParameter("fullName").trim().toLowerCase(); 
+            String icNumber = request.getParameter("icNumber").trim(); 
+            String address = request.getParameter("address").trim().toLowerCase();
             
 
             // 2. Check if email exists
             if (systemUserFacade.emailExists(email)) {
-                request.getSession().setAttribute("popupMessage", "Registration Failed: That email is already in userc!");
+                request.getSession().setAttribute("popupMessage", "Registration Failed: That email is already in user!");
                 request.getSession().setAttribute("popupType", "error");
                 response.sendRedirect("register.jsp");
                 return; 

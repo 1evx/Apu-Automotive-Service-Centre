@@ -4,6 +4,8 @@
  */
 package model;
 
+import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +29,7 @@ public class ServiceTypeFacade extends AbstractFacade<ServiceType> {
         super(ServiceType.class);
     }
     
+    @PermitAll
     public model.ServiceType findByName(String name) {
         try {
             return (model.ServiceType) getEntityManager().createQuery(
@@ -36,5 +39,10 @@ public class ServiceTypeFacade extends AbstractFacade<ServiceType> {
         } catch (javax.persistence.NoResultException e) {
             return null; 
         }
+    }
+    
+    @PermitAll
+    public List<ServiceType> findAllActive() {
+        return getEntityManager().createQuery("SELECT s FROM ServiceType s WHERE s.isActive = true", ServiceType.class).getResultList();
     }
 }

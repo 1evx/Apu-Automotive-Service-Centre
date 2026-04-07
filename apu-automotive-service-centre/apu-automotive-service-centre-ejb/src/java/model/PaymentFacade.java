@@ -4,6 +4,7 @@
  */
 package model;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,4 +28,18 @@ public class PaymentFacade extends AbstractFacade<Payment> {
         super(Payment.class);
     }
     
+    @PermitAll
+    public double calculateTotalRevenue() {
+        try {
+            String jpql = "SELECT SUM(p.amount) FROM Payment p WHERE p.appointment.status <> 'Cancelled'";
+            
+            Double total = (Double) getEntityManager()
+                .createQuery(jpql)
+                .getSingleResult();
+                
+            return total != null ? total : 0.0;
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
 }

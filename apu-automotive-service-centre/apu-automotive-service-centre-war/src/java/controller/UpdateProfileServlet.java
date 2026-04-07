@@ -11,8 +11,11 @@ import javax.servlet.http.HttpSession;
 
 import model.CounterStaff;
 import model.Technician; 
+import model.Customer;
+import model.Manager;
 import model.SystemUser;
 import model.SystemUserFacade;
+import model.SuperManager;
 
 @WebServlet(name = "UpdateProfileServlet", urlPatterns = {"/UpdateProfileServlet"})
 public class UpdateProfileServlet extends HttpServlet {
@@ -48,12 +51,28 @@ public class UpdateProfileServlet extends HttpServlet {
             if (userToUpdate != null) {
                 // 3. Update the standard fields that everyone shares
                 userToUpdate.setFullName(fullName);
-                userToUpdate.setEmail(email);
                 userToUpdate.setPhoneNumber(phoneNumber);
                 userToUpdate.setAddress(address); 
+                
+                // Null-check safety measure for the email
+                if (email != null && !email.trim().isEmpty()) {
+                    userToUpdate.setEmail(email);
+                }
 
                 // 4. ROLE-SPECIFIC UPDATES
-                if (userToUpdate instanceof CounterStaff) {
+                if (userToUpdate instanceof SuperManager) {
+                    SuperManager superMgr = (SuperManager) userToUpdate;
+                    // If you add an input for masterClearance in your JSP later, it will save here
+                    if (request.getParameter("masterClearance") != null && !request.getParameter("masterClearance").trim().isEmpty()) {
+                        superMgr.setMasterClearance(request.getParameter("masterClearance"));
+                    }
+                }
+                else if (userToUpdate instanceof Manager) {
+                    Manager mgr = (Manager) userToUpdate;
+                    if (request.getParameter("officeLocation") != null) {
+                        mgr.setOfficeLocation(request.getParameter("officeLocation"));
+                    }
+                } else if (userToUpdate instanceof CounterStaff) {
                     CounterStaff staff = (CounterStaff) userToUpdate;
                     if (request.getParameter("shiftType") != null) {
                         staff.setShiftType(request.getParameter("shiftType")); 
@@ -61,7 +80,6 @@ public class UpdateProfileServlet extends HttpServlet {
                 } 
                 else if (userToUpdate instanceof Technician) {
                     Technician tech = (Technician) userToUpdate;
-                    
                     if (request.getParameter("specialization") != null) {
                         tech.setSpecialization(request.getParameter("specialization"));
                     }
@@ -90,13 +108,14 @@ public class UpdateProfileServlet extends HttpServlet {
             }
             
             // 8. Redirect back to the exact dashboard they came from
-            // FIXED: Filename is now counterStaff_dashboard.jsp
             if (currentUser instanceof CounterStaff) {
-                response.sendRedirect("counterStaff_dashboard.jsp#edit-profile");
+                response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
             } else if (currentUser instanceof Technician) {
-                response.sendRedirect("technician_dashboard.jsp#edit-profile");
+                response.sendRedirect("TechnicianDashboardServlet#edit-profile");
+            } else if (currentUser instanceof Customer) { 
+                response.sendRedirect("CustomerDashboardServlet#edit-profile");
             } else {
-                response.sendRedirect("manager_dashboard.jsp#edit-profile"); 
+                response.sendRedirect("ManagerDashboardServlet#edit-profile"); 
             }
 
         } catch (Exception e) {
@@ -104,13 +123,14 @@ public class UpdateProfileServlet extends HttpServlet {
             session.setAttribute("popupMessage", "An error occurred while updating your profile.");
             session.setAttribute("popupType", "error");
             
-            // FIXED: Added the missing CounterStaff fallback!
             if (currentUser instanceof CounterStaff) {
-                response.sendRedirect("counterStaff_dashboard.jsp#edit-profile");
+                response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
             } else if (currentUser instanceof Technician) {
-                response.sendRedirect("technician_dashboard.jsp#edit-profile");
+                response.sendRedirect("TechnicianDashboardServlet#edit-profile");
+            } else if (currentUser instanceof Customer) { 
+                response.sendRedirect("CustomerDashboardServlet#edit-profile");
             } else {
-                response.sendRedirect("manager_dashboard.jsp#edit-profile");
+                response.sendRedirect("ManagerDashboardServlet#edit-profile");
             }
         }
     }
