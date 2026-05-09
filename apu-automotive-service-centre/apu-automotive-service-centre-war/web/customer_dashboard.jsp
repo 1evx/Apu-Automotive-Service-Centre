@@ -75,11 +75,11 @@
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">IC Number</label>
-                                                    <input type="text" class="form-control bg-light" name="icNumber" value="${sessionScope.currentUser.icNumber}" readonly>
+                                                    <input type="text" class="form-control" name="icNumber" value="${sessionScope.currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Phone Number</label>
-                                                    <input type="text" class="form-control" name="phoneNumber" value="${sessionScope.currentUser.phoneNumber}">
+                                                    <input type="text" class="form-control" name="phoneNumber" value="${sessionScope.currentUser.phoneNumber}" placeholder="0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold text-danger"><i class="fa-solid fa-lock me-1"></i> Update Password (Optional)</label>
@@ -633,6 +633,24 @@
                     }, 350); //
                 }
             });
+
+            function formatMalaysianIc(value) {
+                const digits = value.replace(/\D/g, '').slice(0, 12);
+
+                if (digits.length <= 6) {
+                    return digits;
+                }
+
+                if (digits.length <= 8) {
+                    return digits.slice(0, 6) + '-' + digits.slice(6);
+                }
+
+                return digits.slice(0, 6) + '-' + digits.slice(6, 8) + '-' + digits.slice(8);
+            }
+
+            function formatMalaysianPhone(value) {
+                return value.replace(/\D/g, '').slice(0, 11);
+            }
             
             //print logic receipt
             window.printReceipt = function(receiptId, date, customerName, plateNo, serviceName, method, amount) {

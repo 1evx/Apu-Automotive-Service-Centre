@@ -72,16 +72,23 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label fw-bold small text-muted">Email Address</label>
-                                                    <input type="email" name="email" class="form-control" value="${sessionScope.currentUser.email}" required>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label fw-bold small text-muted"><i class="fa-solid fa-phone me-1"></i> Phone Number</label>
-                                                    <input type="text" name="phoneNumber" class="form-control" value="${sessionScope.currentUser.phoneNumber}" placeholder="e.g., 012-3456789">
-                                                </div>
-                                            </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">Email Address</label>
+                                <input type="email" name="email" class="form-control" value="${sessionScope.currentUser.email}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">IC Number</label>
+                                <input type="text" name="icNumber" class="form-control" value="${sessionScope.currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted"><i class="fa-solid fa-phone me-1"></i> Phone Number</label>
+                                <input type="text" name="phoneNumber" class="form-control" value="${sessionScope.currentUser.phoneNumber}" placeholder="e.g., 0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
+                            </div>
+                        </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold small text-muted">Home Address</label>
@@ -177,6 +184,7 @@
                                                                                     data-fullname="${cust.fullName}"
                                                                                     data-email="${cust.email}"
                                                                                     data-phone="${cust.phoneNumber}"
+                                                                                    data-ic="${cust.icNumber}"
                                                                                     data-username="${cust.username}"
                                                                                     data-address="${cust.address}"
                                                                                     data-points="${cust.loyaltyPoints}"
@@ -489,13 +497,32 @@
                         document.getElementById('edit-fullName').value = this.getAttribute('data-fullname');
                         document.getElementById('edit-email').value = this.getAttribute('data-email');
                         document.getElementById('edit-phone').value = this.getAttribute('data-phone');
+                        document.getElementById('edit-icNumber').value = this.getAttribute('data-ic');
                         document.getElementById('edit-username').value = this.getAttribute('data-username');
                         document.getElementById('edit-address').value = this.getAttribute('data-address');
                         document.getElementById('edit-points').value = this.getAttribute('data-points');
                     });
                 });
 
-                //real-time Table Search Filter
+                window.formatMalaysianIc = function(value) {
+                    const digits = value.replace(/\D/g, '').slice(0, 12);
+
+                    if (digits.length <= 6) {
+                        return digits;
+                    }
+
+                    if (digits.length <= 8) {
+                        return digits.slice(0, 6) + '-' + digits.slice(6);
+                    }
+
+                    return digits.slice(0, 6) + '-' + digits.slice(6, 8) + '-' + digits.slice(8);
+                };
+
+                window.formatMalaysianPhone = function(value) {
+                    return value.replace(/\D/g, '').slice(0, 11);
+                };
+
+                // Real-time Table Search Filter
                 window.filterTable = function(inputId, tbodyId, dropdownId = null) {
                     const searchText = document.getElementById(inputId).value.toLowerCase();
 

@@ -19,6 +19,8 @@ import model.Technician;
 import model.SystemUser;
 import model.SuperManager;
 import model.SystemUserFacade;
+import utility.IcNumberValidator;
+import utility.PhoneNumberValidator;
 
 /**
  *
@@ -52,10 +54,24 @@ public class RegisterStaffServlet extends HttpServlet {
             String fullName = request.getParameter("fullName");
             String username = request.getParameter("username"); 
             String email = request.getParameter("email");
-            String icNumber = request.getParameter("icNumber"); 
+            String icNumber = IcNumberValidator.normalizeMalaysianIc(request.getParameter("icNumber")); 
             String password = request.getParameter("password");
-            String phoneNumber = request.getParameter("phoneNumber"); 
+            String phoneNumber = PhoneNumberValidator.normalizeMalaysianPhoneNumber(request.getParameter("phoneNumber")); 
             String address = request.getParameter("address");         
+
+            if (!PhoneNumberValidator.isValidMalaysianPhoneNumber(phoneNumber)) {
+                session.setAttribute("popupMessage", "Registration Failed. Please enter a valid Malaysian phone number starting with 01.");
+                session.setAttribute("popupType", "error");
+                response.sendRedirect("ManagerDashboardServlet#manage-staff");
+                return;
+            }
+
+            if (!IcNumberValidator.isValidMalaysianIc(icNumber)) {
+                session.setAttribute("popupMessage", "Registration Failed. Please enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX.");
+                session.setAttribute("popupType", "error");
+                response.sendRedirect("ManagerDashboardServlet#manage-staff");
+                return;
+            }
 
             // 2. Create the Correct Object Based on the Dropdown Role
             SystemUser newStaff = null;
@@ -120,7 +136,7 @@ public class RegisterStaffServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("popupMessage", "Registration Failed. The Email, Username, or IC Number might already be in use.");
+            session.setAttribute("popupMessage", "Registration Failed. The email, username, phone number, or IC number might already be in use.");
             session.setAttribute("popupType", "error");
             
             response.sendRedirect("ManagerDashboardServlet#manage-staff");

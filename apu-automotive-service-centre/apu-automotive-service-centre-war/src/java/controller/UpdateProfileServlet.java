@@ -16,6 +16,8 @@ import model.Manager;
 import model.SystemUser;
 import model.SystemUserFacade;
 import model.SuperManager;
+import utility.IcNumberValidator;
+import utility.PhoneNumberValidator;
 
 @WebServlet(name = "UpdateProfileServlet", urlPatterns = {"/UpdateProfileServlet"})
 public class UpdateProfileServlet extends HttpServlet {
@@ -41,9 +43,42 @@ public class UpdateProfileServlet extends HttpServlet {
             Long userId = Long.parseLong(request.getParameter("userId"));
             String fullName = request.getParameter("fullName");
             String email = request.getParameter("email");
-            String phoneNumber = request.getParameter("phoneNumber"); 
+            String phoneNumber = PhoneNumberValidator.normalizeMalaysianPhoneNumber(request.getParameter("phoneNumber")); 
             String address = request.getParameter("address");
             String password = request.getParameter("password");
+            String icNumber = IcNumberValidator.normalizeMalaysianIc(request.getParameter("icNumber"));
+
+            if (!PhoneNumberValidator.isValidMalaysianPhoneNumber(phoneNumber)) {
+                session.setAttribute("popupMessage", "Update failed. Please enter a valid Malaysian phone number starting with 01.");
+                session.setAttribute("popupType", "error");
+                
+                if (currentUser instanceof CounterStaff) {
+                    response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
+                } else if (currentUser instanceof Technician) {
+                    response.sendRedirect("TechnicianDashboardServlet#edit-profile");
+                } else if (currentUser instanceof Customer) { 
+                    response.sendRedirect("CustomerDashboardServlet#edit-profile");
+                } else {
+                    response.sendRedirect("ManagerDashboardServlet#edit-profile"); 
+                }
+                return;
+            }
+
+            if (!IcNumberValidator.isValidMalaysianIc(icNumber)) {
+                session.setAttribute("popupMessage", "Update failed. Please enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX.");
+                session.setAttribute("popupType", "error");
+                
+                if (currentUser instanceof CounterStaff) {
+                    response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
+                } else if (currentUser instanceof Technician) {
+                    response.sendRedirect("TechnicianDashboardServlet#edit-profile");
+                } else if (currentUser instanceof Customer) { 
+                    response.sendRedirect("CustomerDashboardServlet#edit-profile");
+                } else {
+                    response.sendRedirect("ManagerDashboardServlet#edit-profile"); 
+                }
+                return;
+            }
 
             // 2. Find the fresh user object in the database
             SystemUser userToUpdate = systemUserFacade.find(userId);
@@ -51,6 +86,7 @@ public class UpdateProfileServlet extends HttpServlet {
             if (userToUpdate != null) {
                 // 3. Update the standard fields that everyone shares
                 userToUpdate.setFullName(fullName);
+                userToUpdate.setIcNumber(icNumber);
                 userToUpdate.setPhoneNumber(phoneNumber);
                 userToUpdate.setAddress(address); 
                 
@@ -120,7 +156,7 @@ public class UpdateProfileServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("popupMessage", "An error occurred while updating your profile.");
+            session.setAttribute("popupMessage", "An error occurred while updating your profile. The email, phone number, or IC number may already be in use.");
             session.setAttribute("popupType", "error");
             
             if (currentUser instanceof CounterStaff) {

@@ -25,15 +25,22 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold small">Phone Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="edit-phone" name="phoneNumber" required>
+                            <input type="text" class="form-control" id="edit-phone" name="phoneNumber" placeholder="0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold small">IC Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit-icNumber" name="icNumber" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold small">Username (Read-Only)</label>
                             <input type="text" class="form-control bg-light" id="edit-username" readonly>
                         </div>
+                    </div>
+                    
+                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold small text-warning">Loyalty Points</label>
                             <input type="number" class="form-control" id="edit-points" name="loyaltyPoints" required>

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import model.Customer;
 import model.CustomerFacade;
 import model.SystemUserFacade;
+import utility.IcNumberValidator;
+import utility.PhoneNumberValidator;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
 public class RegisterServlet extends HttpServlet {
@@ -32,11 +34,24 @@ public class RegisterServlet extends HttpServlet {
             String email = request.getParameter("email").trim().toLowerCase();
             String username = request.getParameter("username").trim().toLowerCase();
             String password = request.getParameter("password");
-            String phoneNumber = request.getParameter("phone").trim(); 
+            String phoneNumber = PhoneNumberValidator.normalizeMalaysianPhoneNumber(request.getParameter("phone")); 
             String fullName = request.getParameter("fullName").trim().toLowerCase(); 
-            String icNumber = request.getParameter("icNumber").trim(); 
+            String icNumber = IcNumberValidator.normalizeMalaysianIc(request.getParameter("icNumber")); 
             String address = request.getParameter("address").trim().toLowerCase();
             
+            if (!PhoneNumberValidator.isValidMalaysianPhoneNumber(phoneNumber)) {
+                request.getSession().setAttribute("popupMessage", "Registration Failed: Please enter a valid Malaysian phone number starting with 01.");
+                request.getSession().setAttribute("popupType", "error");
+                response.sendRedirect("register.jsp");
+                return;
+            }
+
+            if (!IcNumberValidator.isValidMalaysianIc(icNumber)) {
+                request.getSession().setAttribute("popupMessage", "Registration Failed: Please enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX.");
+                request.getSession().setAttribute("popupType", "error");
+                response.sendRedirect("register.jsp");
+                return;
+            }
 
             // 2. Check if email exists
             if (systemUserFacade.emailExists(email)) {
@@ -58,8 +73,8 @@ public class RegisterServlet extends HttpServlet {
                 response.sendRedirect("login.jsp");
                 
             } catch (Exception e) {
-                // If the database crashes (e.g., they used a Username or IC that is already taken)
-                request.getSession().setAttribute("popupMessage", "Registration Failed: Username or IC Number already taken.");
+                // If the database crashes (e.g., they used a duplicate unique field)
+                request.getSession().setAttribute("popupMessage", "Registration Failed: Username, phone number, or IC number already taken.");
                 request.getSession().setAttribute("popupType", "error");
                 response.sendRedirect("register.jsp");
             }

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import model.Customer;
 import model.CustomerFacade;
+import utility.IcNumberValidator;
+import utility.PhoneNumberValidator;
 
 @WebServlet(name = "RegisterCustomerServlet", urlPatterns = {"/RegisterCustomerServlet"})
 public class RegisterCustomerServlet extends HttpServlet {
@@ -30,11 +32,25 @@ public class RegisterCustomerServlet extends HttpServlet {
             // 1. Grab all the data from your popup modal
             String fullName = request.getParameter("fullName");
             String email = request.getParameter("email");
-            String phoneNumber = request.getParameter("phoneNumber");
-            String icNumber = request.getParameter("icNumber");
+            String phoneNumber = PhoneNumberValidator.normalizeMalaysianPhoneNumber(request.getParameter("phoneNumber"));
+            String icNumber = IcNumberValidator.normalizeMalaysianIc(request.getParameter("icNumber"));
             String username = request.getParameter("username");
             String address = request.getParameter("address");
             String password = request.getParameter("password");
+
+            if (!PhoneNumberValidator.isValidMalaysianPhoneNumber(phoneNumber)) {
+                session.setAttribute("popupMessage", "Registration failed. Please enter a valid Malaysian phone number starting with 01.");
+                session.setAttribute("popupType", "error");
+                response.sendRedirect("CounterStaffDashboardServlet#manage-customers");
+                return;
+            }
+
+            if (!IcNumberValidator.isValidMalaysianIc(icNumber)) {
+                session.setAttribute("popupMessage", "Registration failed. Please enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX.");
+                session.setAttribute("popupType", "error");
+                response.sendRedirect("CounterStaffDashboardServlet#manage-customers");
+                return;
+            }
 
             // 2. Build the new Customer object
             Customer newCustomer = new Customer();
@@ -71,8 +87,8 @@ public class RegisterCustomerServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            // If the database rejects it (like a duplicate email/username), trigger the error popup
-            session.setAttribute("popupMessage", "Registration failed. Ensure the email or username is not a duplicate.");
+            // If the database rejects it (like a duplicate unique field), trigger the error popup
+            session.setAttribute("popupMessage", "Registration failed. Ensure the email, username, phone number, or IC number is not a duplicate.");
             session.setAttribute("popupType", "error");
         }
 
