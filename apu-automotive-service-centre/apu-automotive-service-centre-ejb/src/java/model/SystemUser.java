@@ -44,6 +44,8 @@ public abstract class SystemUser implements Serializable {
     private boolean isActive = true;
 
     private String fullname;
+
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
     private String address;
 

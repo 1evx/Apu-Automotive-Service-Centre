@@ -32,14 +32,14 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold small">Phone Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="phoneNumber" required>
+                            <input type="text" class="form-control" name="phoneNumber" placeholder="0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold small">IC Number / Passport <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="icNumber" required>
+                            <label class="form-label fw-bold small">IC Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="icNumber" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold small">Username <span class="text-danger">*</span></label>
@@ -67,3 +67,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    function formatMalaysianIc(value) {
+        const digits = value.replace(/\D/g, '').slice(0, 12);
+
+        if (digits.length <= 6) {
+            return digits;
+        }
+
+        if (digits.length <= 8) {
+            return digits.slice(0, 6) + '-' + digits.slice(6);
+        }
+
+        return digits.slice(0, 6) + '-' + digits.slice(6, 8) + '-' + digits.slice(8);
+    }
+
+    function formatMalaysianPhone(value) {
+        return value.replace(/\D/g, '').slice(0, 11);
+    }
+</script>

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import model.Customer;
 import model.CustomerFacade;
+import utility.IcNumberValidator;
+import utility.PhoneNumberValidator;
 
 @WebServlet(name = "EditCustomerServlet", urlPatterns = {"/EditCustomerServlet"})
 public class EditCustomerServlet extends HttpServlet {
@@ -35,8 +37,26 @@ public class EditCustomerServlet extends HttpServlet {
                 // Update their details
                 customerToUpdate.setFullName(request.getParameter("fullName"));
                 customerToUpdate.setEmail(request.getParameter("email"));
-                customerToUpdate.setPhoneNumber(request.getParameter("phoneNumber"));
+                String phoneNumber = PhoneNumberValidator.normalizeMalaysianPhoneNumber(request.getParameter("phoneNumber"));
                 customerToUpdate.setAddress(request.getParameter("address"));
+                String icNumber = IcNumberValidator.normalizeMalaysianIc(request.getParameter("icNumber"));
+
+                if (!PhoneNumberValidator.isValidMalaysianPhoneNumber(phoneNumber)) {
+                    session.setAttribute("popupMessage", "Customer update failed. Please enter a valid Malaysian phone number starting with 01.");
+                    session.setAttribute("popupType", "error");
+                    response.sendRedirect("CounterStaffDashboardServlet#manage-customers");
+                    return;
+                }
+
+                if (!IcNumberValidator.isValidMalaysianIc(icNumber)) {
+                    session.setAttribute("popupMessage", "Customer update failed. Please enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX.");
+                    session.setAttribute("popupType", "error");
+                    response.sendRedirect("CounterStaffDashboardServlet#manage-customers");
+                    return;
+                }
+
+                customerToUpdate.setPhoneNumber(phoneNumber);
+                customerToUpdate.setIcNumber(icNumber);
                 
                 // Parse loyalty points
                 int points = Integer.parseInt(request.getParameter("loyaltyPoints"));
@@ -58,7 +78,7 @@ public class EditCustomerServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("popupMessage", "An error occurred while updating the customer.");
+            session.setAttribute("popupMessage", "An error occurred while updating the customer. The email, phone number, or IC number may already be in use.");
             session.setAttribute("popupType", "error");
         }
 

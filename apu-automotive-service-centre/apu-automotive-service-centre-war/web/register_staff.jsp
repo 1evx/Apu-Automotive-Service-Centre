@@ -78,15 +78,15 @@
                                         <input type="email" name="email" class="form-control" placeholder="employee@apucare.com" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold small text-muted">IC / Passport No.</label>
-                                        <input type="text" name="icNumber" class="form-control" placeholder="Without dashes (-)" required>
+                                        <label class="form-label fw-bold small text-muted">IC Number</label>
+                                        <input type="text" name="icNumber" class="form-control" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label fw-bold small text-muted">Phone Number</label>
-                                        <input type="text" name="phoneNumber" class="form-control" placeholder="e.g., 0123456789">
+                                        <input type="text" name="phoneNumber" class="form-control" placeholder="e.g., 0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label fw-bold small text-muted">Temporary Password</label>
@@ -164,6 +164,24 @@
                 } else {
                     dynamicSection.style.display = 'none';
                 }
+            }
+
+            function formatMalaysianIc(value) {
+                const digits = value.replace(/\D/g, '').slice(0, 12);
+
+                if (digits.length <= 6) {
+                    return digits;
+                }
+
+                if (digits.length <= 8) {
+                    return digits.slice(0, 6) + '-' + digits.slice(6);
+                }
+
+                return digits.slice(0, 6) + '-' + digits.slice(6, 8) + '-' + digits.slice(8);
+            }
+
+            function formatMalaysianPhone(value) {
+                return value.replace(/\D/g, '').slice(0, 11);
             }
         </script>
     </body>

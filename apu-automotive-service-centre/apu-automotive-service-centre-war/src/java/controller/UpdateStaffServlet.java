@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.*;
+import utility.IcNumberValidator;
+import utility.PhoneNumberValidator;
 /**
  *
  * @author TPY
@@ -43,10 +45,24 @@ public class UpdateStaffServlet extends HttpServlet {
             String fullName = request.getParameter("fullName");
             String email = request.getParameter("email");
             String username = request.getParameter("username");
-            String icNumber = request.getParameter("icNumber");
-            String phoneNumber = request.getParameter("phoneNumber");
+            String icNumber = IcNumberValidator.normalizeMalaysianIc(request.getParameter("icNumber"));
+            String phoneNumber = PhoneNumberValidator.normalizeMalaysianPhoneNumber(request.getParameter("phoneNumber"));
             String address = request.getParameter("address");
             boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
+
+            if (!PhoneNumberValidator.isValidMalaysianPhoneNumber(phoneNumber)) {
+                session.setAttribute("popupMessage", "Staff update failed. Please enter a valid Malaysian phone number starting with 01.");
+                session.setAttribute("popupType", "error");
+                response.sendRedirect("ManagerDashboardServlet#manage-staff");
+                return;
+            }
+
+            if (!IcNumberValidator.isValidMalaysianIc(icNumber)) {
+                session.setAttribute("popupMessage", "Staff update failed. Please enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX.");
+                session.setAttribute("popupType", "error");
+                response.sendRedirect("ManagerDashboardServlet#manage-staff");
+                return;
+            }
 
             SystemUser staffToUpdate = SystemUserFacade.find(staffId);
 
@@ -105,7 +121,7 @@ public class UpdateStaffServlet extends HttpServlet {
             
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("popupMessage", "An error occurred while trying to update the profile.");
+            session.setAttribute("popupMessage", "An error occurred while trying to update the profile. The email, username, phone number, or IC number may already be in use.");
             session.setAttribute("popupType", "error");
             response.sendRedirect("ManagerDashboardServlet#manage-staff");
         }

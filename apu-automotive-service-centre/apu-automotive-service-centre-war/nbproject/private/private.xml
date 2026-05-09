@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-<<<<<<< HEAD
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/AIAssistantServlet.java</file>
-            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/ViewAppointmentDetailsServlet.java</file>
-=======
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Asus/Documents/Apu-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/BookAppointmentServlet.java</file>
-            <file>file:/C:/Users/Asus/Documents/Apu-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/ProcessPaymentServlet.java</file>
-            <file>file:/C:/Users/Asus/Documents/Apu-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/CounterStaffDashboardServlet.java</file>
-            <file>file:/C:/Users/Asus/Documents/Apu-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/ManagerDashboardServlet.java</file>
->>>>>>> 60a624cdbb4322adf292680e6e7f8f895b68e9e6
+            <file>file:/E:/Github%20Project/APU-Automotive-Service-Centre/apu-automotive-service-centre/apu-automotive-service-centre-war/src/java/controller/RegisterStaffServlet.java</file>
         </group>
     </open-files>
 </project-private>
