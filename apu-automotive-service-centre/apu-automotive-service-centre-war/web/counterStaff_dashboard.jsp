@@ -503,7 +503,7 @@
                         document.getElementById('edit-points').value = this.getAttribute('data-points');
                     });
                 });
-
+                
                 window.formatMalaysianIc = function(value) {
                     const digits = value.replace(/\D/g, '').slice(0, 12);
 
