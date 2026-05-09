@@ -64,56 +64,64 @@ public class EditAppointmentServlet extends HttpServlet {
             ServiceType service = serviceTypeFacade.find(serviceId);
             Technician technician = (Technician) systemUserFacade.find(technicianId);
 
-            // =======================================================
-            // BULLETPROOF OVERLAP VALIDATION LOGIC
-            // =======================================================
-            
-            // 1. Clean the time string and use US Locale for safe parsing
             String cleanApptTime = apptTime.trim().toUpperCase();
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", java.util.Locale.US);
             
-            // Calculate New Appointment Start & End Times
             LocalTime newStart = LocalTime.parse(cleanApptTime, timeFormatter);
-            LocalTime newEnd = newStart.plusHours(service.getDurationHours());
+
+            int newStartMins = (newStart.getHour() * 60) + newStart.getMinute();
+            int newEndMins = newStartMins + (service.getDurationHours() * 60);
+
+            //operation hour logic
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(parsedDate);
+            int dayOfWeek = cal.get(java.util.Calendar.DAY_OF_WEEK);
             
-            // Get all appointments for this tech on this specific day
+            int closingTimeMins;
+            String closingTimeDisplay;
+            
+            if (dayOfWeek == java.util.Calendar.SATURDAY) {
+                closingTimeMins = 13 * 60; //1:00 PM is 13 hours * 60 mins = 780 for saturday
+                closingTimeDisplay = "1:00 PM";
+            } else {
+                //Monday to Friday
+                closingTimeMins = (18 * 60) + 30; // 6:30 PM is 18.5 hours = 1110
+                closingTimeDisplay = "6:30 PM";
+            }
+            
+            if (newEndMins > closingTimeMins) {
+                throw new Exception("Cannot save edit: This " + service.getDurationHours() + 
+                        "-hour service will finish after our " + closingTimeDisplay + 
+                        " closing time. Please choose an earlier time slot.");
+            }
+
+            //prevent overlap timeslot for technician
             List<Appointment> dailySchedule = appointmentFacade.findByTechnicianAndDate(technician, parsedDate);
             
             for (Appointment existingAppt : dailySchedule) {
                 
-                // RULE 1: THE CRITICAL EDIT RULE: Skip checking against the exact appointment we are currently editing!
                 if (existingAppt.getId().equals(apptId)) {
                     continue; 
                 }
                 
-                // RULE 2: Ignore jobs that are Cancelled, Completed, or Rejected!
                 String existingStatus = existingAppt.getStatus();
                 if (existingStatus != null && (existingStatus.equalsIgnoreCase("Cancelled") || existingStatus.equalsIgnoreCase("Completed") || existingStatus.equalsIgnoreCase("Rejected"))) {
                     continue; 
                 }
 
-                // RULE 3: Calculate Existing Appointment Times
                 String existingTimeStr = existingAppt.getAppointmentTime().trim().toUpperCase();
                 LocalTime existStart = LocalTime.parse(existingTimeStr, timeFormatter);
                 
-                // Keep LocalTime for the error message popup
                 LocalTime existEndDisplay = existStart.plusHours(existingAppt.getServiceType().getDurationHours());
 
-                // THE FIX: Convert everything to absolute minutes to defeat the Midnight Wrap-Around Bug!
-                int newStartMins = (newStart.getHour() * 60) + newStart.getMinute();
-                int newEndMins = newStartMins + (service.getDurationHours() * 60);
-                
                 int existStartMins = (existStart.getHour() * 60) + existStart.getMinute();
                 int existEndMins = existStartMins + (existingAppt.getServiceType().getDurationHours() * 60);
-                
-                // The Overlap Rule (using minutes instead of the broken LocalTime check)
+
                 if (newStartMins < existEndMins && newEndMins > existStartMins) {
                     throw new Exception("The technician is already booked from " + existStart.format(timeFormatter) + " to " + existEndDisplay.format(timeFormatter) + ".");
                 }
             }
-            // =======================================================
 
-            // Update the Appointment
             appt.setServiceType(service);
             appt.setTechnician(technician);
             appt.setAppointmentDate(parsedDate);

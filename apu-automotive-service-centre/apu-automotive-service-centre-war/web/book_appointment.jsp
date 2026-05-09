@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="author" content="gramentheme">
         <meta name="description" content="APU Automotive Service Centre">
-        <title>APU CARE - Book Appointment</title>
+        <title>APU ASC - Book Appointment</title>
         <link rel="shortcut icon" href="static/img/favicon.png">
         <link rel="stylesheet" href="static/css/bootstrap.min.css">
         <link rel="stylesheet" href="static/css/all.min.css">
@@ -158,21 +158,17 @@
         <script src="static/js/main.js"></script>
 
         <script>
-            // --- LIVE SEARCH LOGIC ---
+            // search
             function filterCustomers() {
                 const input = document.getElementById('customerSearch').value.toLowerCase();
                 const items = document.querySelectorAll('.cust-item');
                 
                 items.forEach(item => {
-                    // Grab the data-search string and force it to lowercase here
                     const searchData = item.getAttribute('data-search').toLowerCase();
-                    
                     if (searchData.includes(input)) {
-                        // REMOVE the hidden class, ADD the flex class
                         item.classList.remove('d-none');
                         item.classList.add('d-flex');
                     } else {
-                        // REMOVE the flex class, ADD the hidden class
                         item.classList.remove('d-flex');
                         item.classList.add('d-none');
                     }
@@ -180,66 +176,77 @@
             }
 
             function selectCustomer(id, name, phone) {
-                // 1. Set the hidden input for the Servlet
                 document.getElementById('selectedCustomerId').value = id;
-                
-                // 2. Update the UI in Step 2
                 document.getElementById('displayCustomerName').innerText = name;
                 document.getElementById('displayCustomerPhone').innerText = phone;
                 
-                // 3. Hide Step 1, Reveal Step 2 smoothly
                 document.getElementById('step1-card').style.display = 'none';
-                
                 const step2 = document.getElementById('step2-card');
                 step2.style.display = 'block';
-                setTimeout(() => { step2.style.opacity = '1'; }, 50); // Fade in effect
+                setTimeout(() => { step2.style.opacity = '1'; }, 50);
             }
 
             function resetSearch() {
-                // Go back to Step 1
                 document.getElementById('step1-card').style.display = 'block';
                 document.getElementById('step2-card').style.opacity = '0';
                 setTimeout(() => { document.getElementById('step2-card').style.display = 'none'; }, 300);
                 
-                // Clear the search
                 document.getElementById('customerSearch').value = '';
-                filterCustomers(); // Reset the list
+                filterCustomers(); 
             }
 
-
-            // --- DATE AND TIME LOGIC (Imported from your modal) ---
+            //date time logic
             document.addEventListener("DOMContentLoaded", function() {
                 const dateDropdown = document.getElementById("appointmentDateDropdown");
                 const timeDropdown = document.getElementById("appointmentTimeDropdown");
                 
-                // Populate next 5 days
                 const todayDate = new Date();
-                for(let i = 0; i < 5; i++) {
+                let validDaysFound = 0;
+                let daysOffset = 0;
+
+                //loop until we find 5 VALID working days (Skipping Sundays)
+                while (validDaysFound < 5) {
                     let nextDate = new Date(todayDate);
-                    nextDate.setDate(todayDate.getDate() + i);
+                    nextDate.setDate(todayDate.getDate() + daysOffset);
                     
-                    let yyyy = nextDate.getFullYear();
-                    let mm = String(nextDate.getMonth() + 1).padStart(2, '0');
-                    let dd = String(nextDate.getDate()).padStart(2, '0');
-                    let valueDate = yyyy + "-" + mm + "-" + dd; 
-                    
-                    let displayDate = nextDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                    if (i === 0) displayDate = "Today (" + displayDate + ")";
-                    
-                    let option = document.createElement("option");
-                    option.value = valueDate;
-                    option.text = displayDate;
-                    dateDropdown.appendChild(option);
+                    // getDay() returns 0 for Sunday. If it is NOT Sunday, add it to the list.
+                    if (nextDate.getDay() !== 0) {
+                        let yyyy = nextDate.getFullYear();
+                        let mm = String(nextDate.getMonth() + 1).padStart(2, '0');
+                        let dd = String(nextDate.getDate()).padStart(2, '0');
+                        let valueDate = yyyy + "-" + mm + "-" + dd; 
+                        
+                        let displayDate = nextDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                        if (daysOffset === 0) displayDate = "Today (" + displayDate + ")";
+                        
+                        let option = document.createElement("option");
+                        option.value = valueDate;
+                        option.text = displayDate;
+
+                        option.setAttribute("data-day", nextDate.getDay()); 
+                        
+                        dateDropdown.appendChild(option);
+                        validDaysFound++;
+                    }
+                    daysOffset++;
                 }
 
                 function updateTimeSlots() {
                     timeDropdown.innerHTML = '<option value="" disabled selected>-- Select Time --</option>';
-                    const selectedDateStr = dateDropdown.value;
-                    if (!selectedDateStr) return;
+                    
+                    const selectedOption = dateDropdown.options[dateDropdown.selectedIndex];
+                    if (!selectedOption.value) return;
 
-                    let startHour = 8;  
-                    const endHour = 20; 
+                    const selectedDateStr = selectedOption.value;
+                    const selectedDayOfWeek = parseInt(selectedOption.getAttribute("data-day"));
 
+                    //set strict operating hours based on the day
+                    let startHour = 9; 
+                    
+                    // If Saturday, last slot is 12:00 PM. Otherwise, last slot is 5:00 PM.
+                    let endHour = (selectedDayOfWeek === 6) ? 12 : 17; 
+
+                    // don't let them book a time in the past
                     const rightNow = new Date();
                     let yyyy = rightNow.getFullYear();
                     let mm = String(rightNow.getMonth() + 1).padStart(2, '0');
@@ -248,20 +255,22 @@
 
                     if (selectedDateStr === exactTodayStr) {
                         let currentHour = rightNow.getHours();
-                        if (currentHour >= 8) {
+                        if (currentHour >= 9) {
                             startHour = currentHour + 1;
                         }
                     }
 
+                    // if they are trying to book today, but it's already past closing time
                     if (startHour > endHour) {
                         let option = document.createElement("option");
-                        option.text = "Closed for today";
+                        option.text = "No slots available today";
                         option.value = "";
                         option.disabled = true;
                         timeDropdown.appendChild(option);
                         return; 
                     }
 
+                    //generate the slots!
                     for (let hour = startHour; hour <= endHour; hour++) {
                         let displayHour = hour % 12 || 12; 
                         let ampm = hour < 12 ? 'AM' : 'PM';

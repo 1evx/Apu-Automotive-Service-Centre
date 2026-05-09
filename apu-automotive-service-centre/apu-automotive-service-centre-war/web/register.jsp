@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="author" content="gramentheme">
         <meta name="description" content="Fresheat food & Restaurant Html Template">
-        <title>APU CARE - Register</title>
+        <title>APU ASC - Register</title>
         <link rel="shortcut icon" href="static/img/favicon.png">
         <link rel="stylesheet" href="static/css/bootstrap.min.css">
         <link rel="stylesheet" href="static/css/all.min.css">
@@ -159,7 +159,7 @@
 
         <%-- PASSWORD MATCH & EYE ICON LOGIC --%>
         <script>
-            // Toggle eye icon and password visibility
+            //password toggle
             function toggleVisibility(inputId, iconId) {
                 const inputField = document.getElementById(inputId);
                 const icon = document.getElementById(iconId);
@@ -175,7 +175,7 @@
                 }
             }
 
-            // Stop form submission if passwords don't match
+
             function validatePasswordMatch() {
                 const password = document.getElementById("regPassword").value;
                 const confirmPassword = document.getElementById("regConfirmPassword").value;
@@ -184,11 +184,11 @@
                 if (password !== confirmPassword) {
                     errorMsg.style.display = "block";
                     document.getElementById("regConfirmPassword").focus();
-                    return false; // Stop the form!
+                    return false;
                 }
                 
                 errorMsg.style.display = "none";
-                return true; // Go ahead and submit to the Servlet
+                return true;
             }
 
             function formatMalaysianIc(value) {

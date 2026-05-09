@@ -17,7 +17,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>APU CARE - Customer Dashboard</title>
+        <title>APU ASC - Customer Dashboard</title>
         
         <link rel="shortcut icon" href="static/img/favicon.png">
         
@@ -253,7 +253,7 @@
                                                                             <%-- 2. Now, print EXACTLY ONE button based on what we found --%>
                                                                             <c:choose>
                                                                                 <c:when test="${hasReviewed}">
-                                                                                    <a href="#comment" onclick="event.stopPropagation(); activateTab('comment');" class="btn btn-sm btn-primary border-opacity-50" style="font-size: 0.75rem;">
+                                                                                   <a href="#comment" onclick="viewSpecificReview(event, '${appt.id}')" class="btn btn-sm btn-primary border-opacity-50" style="font-size: 0.75rem;">
                                                                                         <i class="fa-regular fa-comment-dots me-1"></i> View Review (${reviewRating}★)
                                                                                     </a>
                                                                                 </c:when>
@@ -283,7 +283,7 @@
                             <div id="feedback" class="dashboard-section" style="display: none;">
                                 <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
                                     <div class="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
-                                        <h4 class="widget-title mb-0"><i class="fa-regular fa-comments me-2"></i> Technician Reports</h4>
+                                        <h4 class="widget-title mb-0"><i class="fa-regular fa-comments me-2"></i> Technician Feedbacks</h4>
                                     </div>
                                     <div class="card-body p-4 bg-light">
                                         <c:choose>
@@ -378,9 +378,8 @@
                                 <div class="single-sidebar-widget">
                                     <div class="dishes-card style2">
                                         <div class="dishes-thumb">
-                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px; font-size: 40px;">
-                                                <i class="fa-solid fa-user"></i>
-                                            </div>
+                                            <img src="static/img/profile/customerIcon.png" alt="thumb">
+                                            <div class="circle-shape"><img class="cir36" src="static/img/profile/circleShape.png" alt="shape"></div>
                                         </div>
                                         <div class="dishes-content text-center">
                                             <h3 class="mb-1">${sessionScope.currentUser.fullName}</h3>
@@ -416,62 +415,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="viewApptDetailsModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content rounded-4 border-0 shadow">
-                    <div class="modal-header border-bottom-0 pb-0">
-                        <h5 class="modal-title fw-bold"><i class="fa-solid fa-circle-info text-primary me-2"></i>Service Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-                            <div>
-                                <h6 class="text-muted mb-1">Appointment Ref</h6>
-                                <h4 class="fw-bold mb-0 text-dark" id="modal-appt-ref"></h4>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge fs-6 mb-1" id="modal-appt-status"></span>
-                                <div class="text-muted small" id="modal-appt-datetime"></div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-4 mb-md-0">
-                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-car me-2"></i>Vehicle Info</h6>
-                                <div class="mb-2"><span class="text-muted d-inline-block" style="width: 80px;">Plate No:</span> <span class="fw-bold text-dark text-uppercase border rounded px-1" id="modal-appt-plate"></span></div>
-                                <div class="mb-2"><span class="text-muted d-inline-block" style="width: 80px;">Service:</span> <span class="fw-bold text-dark" id="modal-appt-service"></span></div>
-                            </div>
-                            <div class="col-md-6">
-                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-clipboard-list me-2"></i>Booking Notes</h6>
-                                <p class="mb-0 text-dark small" id="modal-appt-remarks" style="white-space: pre-wrap;"></p>
-                            </div>
-                        </div>
-                        
-                        <div class="row mb-2 border-top pt-4" id="modal-payment-section" style="display: none;">
-                            <div class="col-12">
-                                <h6 class="fw-bold text-success mb-3"><i class="fa-solid fa-money-bill-wave me-2"></i>Payment Summary</h6>
-                                <div class="d-flex justify-content-between align-items-center bg-success bg-opacity-10 p-3 rounded-3 border border-success border-opacity-25">
-                                    <div>
-                                        <span class="text-muted d-block small mb-1">Payment Method</span> 
-                                        <span class="fw-bold text-dark" id="modal-appt-method"></span>
-                                    </div>
-                                    <div class="text-end">
-                                        <span class="text-muted d-block small mb-1">Total Paid</span> 
-                                        <span class="fw-bold text-success fs-5">RM <span id="modal-appt-price"></span></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-top-0 pt-0 justify-content-between">
-                        <button type="button" class="btn btn-outline-primary fw-bold" id="modal-view-feedback-btn" style="display: none;">
-                            <i class="fa-regular fa-comment me-2"></i>View Technician Feedback
-                        </button>
-                        <button type="button" class="btn btn-secondary fw-bold px-4" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <jsp:include page="component/viewAppointmentDetailsModal.jsp" />
 
         <div class="modal fade" id="writeReviewModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -525,7 +469,7 @@
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 
-                // --- 1. TAB SWITCHING LOGIC ---
+                //tab switch
                 const sidebarButtons = document.querySelectorAll('.sidebar-btn');
                 const dashboardSections = document.querySelectorAll('.dashboard-section');
 
@@ -558,9 +502,9 @@
                     activateTab(hashId);
                 }
                 
-                window.activateTab = activateTab; // make global for onclicks
+                window.activateTab = activateTab;
 
-                // --- 2. MODAL & TECHNICIAN FEEDBACK LOGIC ---
+                //modal and technicin feedback logic
                 const viewApptRows = document.querySelectorAll('.view-appt-row');
                 
                 viewApptRows.forEach(row => {
@@ -568,7 +512,7 @@
                         if (event.target.closest('button') || event.target.closest('a')) {
                             return; 
                         }
-                        // 1. Populate the data
+
                         const appId = this.getAttribute('data-appid');
                         document.getElementById('modal-appt-ref').innerText = "#APP-" + appId;
                         document.getElementById('modal-appt-datetime').innerText = this.getAttribute('data-date') + " at " + this.getAttribute('data-time');
@@ -594,7 +538,7 @@
                             paymentSection.style.display = 'none';
                         }
                         
-                        // 2. Technician Feedback Redirect
+                        //technician Feedback Redirect
                         const feedbackBtn = document.getElementById('modal-view-feedback-btn');
                         const feedbackCard = document.getElementById('feedback-card-' + appId);
                         
@@ -602,25 +546,36 @@
                             feedbackBtn.style.display = 'block';
                             feedbackBtn.onclick = function() {
                                 bootstrap.Modal.getInstance(document.getElementById('viewApptDetailsModal')).hide();
+                                
                                 history.pushState(null, null, '#feedback');
                                 activateTab('feedback');
+
                                 setTimeout(() => {
                                     feedbackCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    feedbackCard.style.boxShadow = "0 0 0 4px rgba(13, 110, 253, 0.5)"; 
-                                    setTimeout(() => { feedbackCard.style.boxShadow = "none"; }, 2000);
+
+                                    feedbackCard.classList.remove('pulse-highlight'); 
+
+                                    void feedbackCard.offsetWidth; 
+
+                                    feedbackCard.classList.add('pulse-highlight');
+
+                                    setTimeout(() => { 
+                                        feedbackCard.classList.remove('pulse-highlight'); 
+                                    }, 2500);
+
                                 }, 350); 
                             };
                         } else {
                             feedbackBtn.style.display = 'none';
                         }
+                      
 
-                        // 3. Manually open the Modal!
                         const modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('viewApptDetailsModal'));
                         modalInstance.show();
                     });
                 });
 
-                // --- 3. TABLE FILTER LOGIC ---
+                // table logic filter
                 const searchInput = document.getElementById('historySearch');
                 const dateInput = document.getElementById('historyDate');
                 const clearDateBtn = document.getElementById('clearDateBtn');
@@ -648,6 +603,35 @@
                     dateInput.value = ''; 
                     filterHistoryTable(); 
                 });
+                
+
+                window.viewSpecificReview = function(event, appId) {
+                    if (event) {
+                        event.preventDefault(); 
+                        event.stopPropagation(); 
+                    }
+
+                    history.pushState(null, null, '#comment');
+                    activateTab('comment');
+
+                    setTimeout(() => {
+                        const reviewCard = document.getElementById('comment-card-' + appId);
+
+                        if (reviewCard) {
+                            reviewCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                            reviewCard.classList.remove('pulse-highlight'); 
+
+                            void reviewCard.offsetWidth; 
+
+                            reviewCard.classList.add('pulse-highlight');
+
+                            setTimeout(() => { 
+                                reviewCard.classList.remove('pulse-highlight'); 
+                            }, 2500);
+                        }
+                    }, 350); //
+                }
             });
 
             function formatMalaysianIc(value) {
@@ -668,7 +652,7 @@
                 return value.replace(/\D/g, '').slice(0, 11);
             }
             
-            // --- 4. PRINT RECEIPT LOGIC ---
+            //print logic receipt
             window.printReceipt = function(receiptId, date, customerName, plateNo, serviceName, method, amount) {
             const formattedAmount = isNaN(parseFloat(amount)) ? amount : "RM " + parseFloat(amount).toFixed(2);
 

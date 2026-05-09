@@ -147,7 +147,7 @@
                 const techFields = document.getElementById('technician-fields');
                 const counterFields = document.getElementById('counter-fields'); 
 
-                // Hide all by default
+                //hide all by default
                 managerFields.style.display = 'none';
                 techFields.style.display = 'none';
                 counterFields.style.display = 'none'; 

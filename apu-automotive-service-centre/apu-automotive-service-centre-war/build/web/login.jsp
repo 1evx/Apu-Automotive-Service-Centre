@@ -18,7 +18,7 @@
         <meta name="author" content="gramentheme">
         <meta name="description" content="Fresheat food & Restaurant Html Template">
         <!-- ======== Page title ============ -->
-        <title>APU CARE</title>
+        <title>APU ASC</title>
         <!--<< Favcion >>-->
         <link rel="shortcut icon" href="static/img/favicon.png">
         <!--<< Bootstrap min.css >>-->

@@ -16,7 +16,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>APU CARE - Technician Dashboard</title>
+        <title>APU ASC - Technician Dashboard</title>
         <link rel="shortcut icon" href="static/img/favicon.png">
         <link rel="stylesheet" href="static/css/bootstrap.min.css">
         <link rel="stylesheet" href="static/css/all.min.css">
@@ -264,10 +264,10 @@
                                 </div>
                             </div>
                                                     
-                             <div id="comment" class="dashboard-section" style="display: none;">
+                            <div id="comment" class="dashboard-section" style="display: none;">
                                 <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
                                     <div class="card-header bg-white p-4 border-bottom">
-                                        <h4 class="widget-title mb-0"><i class="fa-regular fa-comments me-2"></i> Customer Feedback</h4>
+                                        <h4 class="widget-title mb-0"><i class="fa-regular fa-comments me-2"></i> Customer Comments</h4>
                                         <p class="text-muted small mb-0 mt-1">See what customers are saying about your service.</p>
                                     </div>
                                     
@@ -278,7 +278,7 @@
                                                 <c:when test="${empty requestScope.myComments}">
                                                     <div class="text-center py-5 text-muted">
                                                         <i class="fa-regular fa-comment-dots fa-3x mb-3 opacity-25"></i>
-                                                        <h5>No feedback received yet.</h5>
+                                                        <h5>No comments received yet.</h5>
                                                         <p class="small">When customers review your completed jobs, they will appear here!</p>
                                                     </div>
                                                 </c:when>
@@ -332,8 +332,8 @@
                                 <div class="single-sidebar-widget">
                                     <div class="dishes-card style2 wow fadeInUp" data-wow-delay="0.2s">
                                         <div class="dishes-thumb">
-                                            <img src="static/img/dishes/dishes2_1.png" alt="thumb">
-                                            <div class="circle-shape"><img class="cir36" src="static/img/food-items/circleShape.png" alt="shape"></div>
+                                            <img src="static/img/profile/technicianIcon.png" alt="thumb">
+                                            <div class="circle-shape"><img class="cir36" src="static/img/profile/circleShape.png" alt="shape"></div>
                                         </div>
                                         <div class="dishes-content text-center">
                                             <a href="#edit-profile">
@@ -393,7 +393,7 @@
                 const sidebarButtons = document.querySelectorAll('.sidebar-btn');
                 const dashboardSections = document.querySelectorAll('.dashboard-section');
 
-                // --- TAB SWITCHING LOGIC ---
+                //switch tab
                 function activateTab(targetId) {
                     dashboardSections.forEach(section => section.style.display = 'none');
                     sidebarButtons.forEach(btn => btn.classList.remove('active'));
@@ -423,7 +423,7 @@
                     activateTab(hashId);
                 }
 
-                // --- MODAL POPULATION LOGIC ---
+                //populate moda
                 const completeBtns = document.querySelectorAll('.complete-job-btn');
                 completeBtns.forEach(btn => {
                     btn.addEventListener('click', function() {
@@ -431,29 +431,25 @@
                     });
                 });
                 
-                // --- TASK HISTORY FILTER LOGIC ---
+                //task history filter
                 window.filterHistoryTable = function() {
                     const searchText = document.getElementById('historySearchBox').value.toLowerCase();
-                    const dateFilter = document.getElementById('historyDateFilter').value; // Format is automatically YYYY-MM-DD
+                    const dateFilter = document.getElementById('historyDateFilter').value; 
                     
-                    // Grab all rows inside the Task History table body specifically
                     const tbody = document.querySelector('#task-history tbody');
                     const rows = tbody.getElementsByTagName('tr');
 
                     for (let i = 0; i < rows.length; i++) {
-                        // Skip the empty message row if the table is empty
+
                         if (rows[i].cells.length === 1) continue; 
                         
                         const rowText = rows[i].innerText.toLowerCase();
                         const rowDate = rows[i].getAttribute('data-date');
 
-                        // 1. Check Text Search
                         const matchesSearch = rowText.includes(searchText);
                         
-                        // 2. Check Date Filter (If date picker is empty, ignore it)
                         const matchesDate = (dateFilter === "") || (rowDate === dateFilter);
 
-                        // Only show row if it passes BOTH filters
                         if (matchesSearch && matchesDate) {
                             rows[i].style.display = '';
                         } else {
@@ -465,9 +461,9 @@
                 const viewTaskRows = document.querySelectorAll('.view-task-row');
                 viewTaskRows.forEach(row => {
                     row.addEventListener('click', function() {
-                        
+
                         const appId = this.getAttribute('data-appid');
-                        
+
                         // Populate Header & Details
                         document.getElementById('detail-ref').innerText = this.getAttribute('data-ref');
                         document.getElementById('detail-datetime').innerText = this.getAttribute('data-fulldate');
@@ -477,50 +473,45 @@
                         document.getElementById('detail-plate').innerText = this.getAttribute('data-plate');
                         document.getElementById('detail-service').innerText = this.getAttribute('data-service');
                         document.getElementById('detail-remarks').innerText = this.getAttribute('data-remarks');
-                        
+
                         const status = this.getAttribute('data-status');
                         const statusBadge = document.getElementById('detail-status');
                         statusBadge.innerText = status;
                         statusBadge.className = 'badge fs-6 mb-1 bg-' + (status === 'Paid' ? 'success' : 'info');
-                        
-                        // --- SMART REDIRECT LOGIC ---
+
                         const commentBtn = document.getElementById('detail-view-comment-btn');
                         const commentCard = document.getElementById('comment-card-' + appId);
-                        
+
                         if (commentCard) {
-                            // The customer left a comment! Show the button.
                             commentBtn.style.display = 'block';
-                            
+
                             commentBtn.onclick = function() {
-                                // 1. Close the popup modal
                                 const modalElement = document.getElementById('viewTaskDetailsModal');
                                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
                                 modalInstance.hide();
-                                
-                                // 2. Switch the dashboard to the Feedback tab
+
                                 history.pushState(null, null, '#comment');
                                 activateTab('comment');
-                                
-                                // 3. Wait for the tab to switch, then scroll to the specific comment
+
                                 setTimeout(() => {
                                     commentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    
-                                    // Make it glow so the technician knows which one to read!
-                                    commentCard.style.transition = "box-shadow 0.5s ease";
-                                    commentCard.style.boxShadow = "0 0 0 4px rgba(13, 110, 253, 0.5)"; // Bootstrap primary glow
-                                    
-                                    // Remove the glow after 2 seconds
-                                    setTimeout(() => {
-                                        commentCard.style.boxShadow = "none";
-                                    }, 2000);
+
+                                    commentCard.classList.remove('pulse-highlight'); 
+
+                                    void commentCard.offsetWidth; 
+
+                                    commentCard.classList.add('pulse-highlight');
+
+                                    setTimeout(() => { 
+                                        commentCard.classList.remove('pulse-highlight'); 
+                                    }, 2500);
                                 }, 350); 
                             };
                         } else {
-                            // No comment found for this specific task, keep button hidden
                             commentBtn.style.display = 'none';
                         }
                     });
-                });
+});
             });
 
             function formatMalaysianIc(value) {

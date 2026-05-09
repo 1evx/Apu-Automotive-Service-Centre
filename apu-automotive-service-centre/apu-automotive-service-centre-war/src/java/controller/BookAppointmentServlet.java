@@ -81,8 +81,33 @@ public class BookAppointmentServlet extends HttpServlet {
             int newStartMins = (newStart.getHour() * 60) + newStart.getMinute();
             int newEndMins = newStartMins + (service.getDurationHours() * 60);
             
+            //operation hour
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTime(parsedDate);
+            int dayOfWeek = cal.get(java.util.Calendar.DAY_OF_WEEK);
+            
+            int closingTimeMins;
+            String closingTimeDisplay;
+            
+            if (dayOfWeek == java.util.Calendar.SATURDAY) {
+                //satuday until 1pm
+                closingTimeMins = 13 * 60;
+                closingTimeDisplay = "1:00 PM";
+            } else {
+                //Monday to Friday
+                closingTimeMins = (18 * 60) + 30;
+                closingTimeDisplay = "6:30 PM";
+            }
+            
+            if (newEndMins > closingTimeMins) {
+                throw new Exception("Cannot book: This " + service.getDurationHours() + 
+                        "-hour service will finish after our " + closingTimeDisplay + 
+                        " closing time. Please choose an earlier time slot.");
+            }
+            
             List<Appointment> dailySchedule = appointmentFacade.findByTechnicianAndDate(technician, parsedDate);
             
+            //time slot available logic
             for (Appointment existingAppt : dailySchedule) {
                 
                 String status = existingAppt.getStatus();

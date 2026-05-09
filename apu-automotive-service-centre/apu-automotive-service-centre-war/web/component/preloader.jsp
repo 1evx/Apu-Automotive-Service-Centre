@@ -26,16 +26,13 @@
                          -
                      </span>
                      <span data-text-preloader="C" class="letters-loading">
-                         C
-                     </span>
-                     <span data-text-preloader="A" class="letters-loading">
                          A
                      </span>
-                     <span data-text-preloader="R" class="letters-loading">
-                         R
+                     <span data-text-preloader="A" class="letters-loading">
+                         S
                      </span>
-                     <span data-text-preloader="E" class="letters-loading">
-                         E
+                     <span data-text-preloader="R" class="letters-loading">
+                         C
                      </span>
                  </div>
                  <p class="text-center">Loading</p>

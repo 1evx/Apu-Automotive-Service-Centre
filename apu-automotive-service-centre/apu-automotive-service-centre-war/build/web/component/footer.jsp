@@ -1,27 +1,15 @@
-<%-- 
-    Document   : footer
-    Created on : Mar 20, 2026, 3:55:43 PM
-    Author     : TPY
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <footer class="footer-section bg-title fix">
         <div class="footer-widgets-wrapper">
-            <div class="shape1 float-bob-y d-none d-xxl-block"><img src="static/img/shape/footerShape1_1.png"
-                    alt="shape"></div>
-            <div class="shape2 d-none d-xxl-block"><img src="static/img/shape/footerShape1_2.png" alt="shape"></div>
-            <div class="shape3 d-none d-xxl-block"><img src="static/img/shape/footerShape1_3.png" alt="shape"></div>
-            <div class="shape4  d-none d-xxl-block"><img src="static/img/shape/footerShape1_4.png" alt="shape"></div>
-            <div class="container">
                 <div class="footer-top">
                     <div class="row gy-4">
                         <div class="col-lg-4">
                             <div class="fancy-box">
                                 <div class="item1"><i class="fa-solid fa-location-dot"></i></div>
                                 <div class="item2">
-                                    <h6>address</h6>
+                                    <h6>Location</h6>
                                     <p>Jalan Teknologi 5, Taman Teknologi Malaysia, Kuala Lumpur </p>
                                 </div>
                             </div>
@@ -30,8 +18,8 @@
                             <div class="fancy-box">
                                 <div class="item1"><i class="fa-solid fa-envelope"></i></div>
                                 <div class="item2">
-                                    <h6>send email</h6>
-                                    <p>apu@example.com</p>
+                                    <h6>Email Us</h6>
+                                    <p>support@apu-asc.com.my</p>
                                 </div>
                             </div>
                         </div>
@@ -39,16 +27,16 @@
                             <div class="fancy-box">
                                 <div class="item1"><i class="fa-regular fa-phone-volume"></i></div>
                                 <div class="item2">
-                                    <h6>call emergency</h6>
-                                    <p>+88 0123 654 99</p>
+                                    <h6>Call Desk</h6>
+                                    <p>+603 1234 5678</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".2s">
+                <div class="row px-4">
+                    <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".2s">
                         <div class="single-footer-widget">
                             <div class="widget-head">
                                 <a href="index.jsp">
@@ -57,9 +45,7 @@
                             </div>
                             <div class="footer-content">
                                 <p>
-                                    Phasellus ultricies aliquam volutpat ullamcorper laoreet neque, a lacinia
-                                    curabitur
-                                    lacinia mollis
+                                    APU Automotive Service Centre provides top-tier vehicle maintenance, advanced diagnostics, and expert repairs to keep you safely on the road.
                                 </p>
                                 <div class="social-icon d-flex align-items-center">
                                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -70,109 +56,61 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 ps-xl-5 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="col-xl-4 col-lg-4 col-md-6 ps-xl-5 wow fadeInUp" data-wow-delay=".4s">
                         <div class="single-footer-widget">
                             <div class="widget-head">
                                 <h3>Quick Links</h3>
                             </div>
                             <ul class="list-area">
                                 <li>
-                                    <a href="about.jsp">
+                                    <a href="index.jsp">
+                                        <i class="fa-solid fa-chevrons-right"></i>
+                                        Home Page
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="About">
                                         <i class="fa-solid fa-chevrons-right"></i>
                                         About Us
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="gallery.html">
+                                    <a href="Services">
                                         <i class="fa-solid fa-chevrons-right"></i>
-                                        Our Gallery
+                                        Our Services
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="blog.html">
+                                    <a href="login.jsp">
                                         <i class="fa-solid fa-chevrons-right"></i>
-                                        Our Blogs
+                                        Book Appointment
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="faq.html">
+                                    <a href="contact.jsp">
                                         <i class="fa-solid fa-chevrons-right"></i>
-                                        FAQ’S
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="contact.html">
-                                        <i class="fa-solid fa-chevrons-right"></i>
-                                        Contact Us
+                                        Contact Support
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 ps-xl-5 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="col-xl-4 col-lg-4 col-md-6 ps-xl-5 wow fadeInUp" data-wow-delay=".4s">
                         <div class="single-footer-widget">
                             <div class="widget-head">
-                                <h3>Our Menu</h3>
-                            </div>
-                            <ul class="list-area">
-                                <li>
-                                    <a href="menu.html">
-                                        <i class="fa-solid fa-chevrons-right"></i>
-                                        Burger King
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="menu.html">
-                                        <i class="fa-solid fa-chevrons-right"></i>
-                                        Pizza king
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="menu.html">
-                                        <i class="fa-solid fa-chevrons-right"></i>
-                                        Fresh Food
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="menu.html">
-                                        <i class="fa-solid fa-chevrons-right"></i>
-                                        Vegetable
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="menu.html">
-                                        <i class="fa-solid fa-chevrons-right"></i>
-                                        Desserts
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 ps-xl-5 wow fadeInUp" data-wow-delay=".4s">
-                        <div class="single-footer-widget">
-                            <div class="widget-head">
-                                <h3>Contact Us</h3>
+                                <h3>Operation Hours</h3>
                             </div>
                             <ul class="list-area">
                                 <li class="mb-2">
-                                    Monday – Friday: <span class="text-theme-color2"> 8am – 4pm </span>
+                                    Monday – Saturday: <span class="text-theme-color2"> 9:00 AM – 6:30 PM </span>
                                 </li>
                                 <li>
-                                    Saturday: <span class="text-theme-color2"> 8am – 12am </span>
+                                    Saturday: <span class="text-theme-color2"> 9:00 AM – 1:00 PM </span>
+                                </li>
+                                <li class="mt-2">
+                                    Sunday & Public Holidays: <span class="text-theme-color2"> Closed </span>
                                 </li>
                             </ul>
-                            <form action="#" class="mt-4">
-                                <div class="form-control">
-                                    <input class="email" type="email" placeholder="Your email address">
-                                    <button type="submit" class="submit-btn"><i
-                                            class="fa-solid fa-arrow-right-long"></i></button>
-                                </div>
-                                <div class="form-control style2 mt-3">
-                                    <input id="checkbox" name="checkbox" type="checkbox">
-                                    <label for="checkbox">I agree to the <a href="contact.html">Privacy Policy.
-                                        </a></label>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -182,7 +120,7 @@
             <div class="container">
                 <div class="footer-wrapper d-flex align-items-center justify-content-between">
                     <p class="wow fadeInLeft" data-wow-delay=".3s">
-                        © All Copyright 2026 by <a href="https://github.com/1evx/Apu-Automotive-Service-Centre">Github Creator</a>
+                        © All Copyright 2026 by <a href="https://github.com/1evx/Apu-Automotive-Service-Centre">Liew&Tan</a>
                     </p>
                     <ul class="brand-logo wow fadeInRight" data-wow-delay=".5s">
                         <li>

@@ -18,7 +18,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="author" content="gramentheme">
         <meta name="description" content="APU Automotive Service Centre">
-        <title>APU CARE - Counter Staff</title>
+        <title>APU ASC - Counter Staff</title>
         <link rel="shortcut icon" href="static/img/favicon.png">
         <link rel="stylesheet" href="static/css/bootstrap.min.css">
         <link rel="stylesheet" href="static/css/all.min.css">
@@ -380,8 +380,8 @@
                                 <div class="single-sidebar-widget">
                                     <div class="dishes-card style2 wow fadeInUp" data-wow-delay="0.2s">
                                         <div class="dishes-thumb">
-                                            <img src="static/img/dishes/dishes2_1.png" alt="thumb">
-                                            <div class="circle-shape"><img class="cir36" src="static/img/food-items/circleShape.png" alt="shape"></div>
+                                            <img src="static/img/profile/counterStaff.png" alt="thumb">
+                                            <div class="circle-shape"><img class="cir36" src="static/img/profile/circleShape.png" alt="shape"></div>
                                         </div>
                                         <div class="dishes-content">
                                             <a href="#edit-profile">
@@ -421,12 +421,17 @@
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     Swal.fire({
-                        icon: '${sessionScope.popupType}',
-                        title: '${sessionScope.popupType == "error" ? "Action Failed!" : "Success!"}',
-                        text: '${sessionScope.popupMessage}',
-                        confirmButtonColor: '#0d6efd',
-                        timer: ${sessionScope.popupType == "success" ? 3000 : 0},
-                        timerProgressBar: ${sessionScope.popupType == "success"}
+                        icon: `${sessionScope.popupType}`,
+                        title: `${sessionScope.popupType == 'error' ? 'Action Failed!' : 'Success!'}`,
+
+                        text: `${sessionScope.popupMessage}`, 
+
+                        confirmButtonColor: '#0d6efd'
+
+                        <c:if test="${sessionScope.popupType == 'success'}">
+                        , timer: 3000,
+                        timerProgressBar: true
+                        </c:if>
                     });
                 });
             </script>
@@ -484,7 +489,7 @@
                     activateTab(hashId);
                 }
 
-                // Populate Edit Customer Modal automatically when clicked!
+                //populate Edit Customer Modal value when clicked
                 const editButtons = document.querySelectorAll('.edit-btn');
                 editButtons.forEach(btn => {
                     btn.addEventListener('click', function() {
@@ -520,29 +525,24 @@
                 // Real-time Table Search Filter
                 window.filterTable = function(inputId, tbodyId, dropdownId = null) {
                     const searchText = document.getElementById(inputId).value.toLowerCase();
-                    
-                    // If a dropdown was passed in, get its value. Otherwise, just use "" (empty string)
+
                     const statusFilter = dropdownId ? document.getElementById(dropdownId).value.toLowerCase() : "";
                     
                     const tbody = document.getElementById(tbodyId);
                     const rows = tbody.getElementsByTagName('tr');
 
                     for (let i = 0; i < rows.length; i++) {
-                        // Skip filtering if it's an empty/loading state row
+
                         if (rows[i].cells.length === 1) continue; 
                         
                         const rowText = rows[i].innerText.toLowerCase();
                         
-                        // Grab the data-status attribute from the <tr> (if it exists)
                         const rowStatus = rows[i].getAttribute('data-status') ? rows[i].getAttribute('data-status').toLowerCase() : "";
 
-                        // 1. Does the row match the text typed in the search box?
                         const matchesSearch = rowText.includes(searchText);
-                        
-                        // 2. Does the row match the dropdown selection? (If dropdown is "All Status", matchesStatus is true)
+
                         const matchesStatus = statusFilter === "" || rowStatus === statusFilter;
 
-                        // Only show the row if it passes BOTH filters!
                         if (matchesSearch && matchesStatus) {
                             rows[i].style.display = '';
                         } else {
@@ -554,28 +554,23 @@
                 const checkoutBtns = document.querySelectorAll('.checkout-btn');
                 checkoutBtns.forEach(btn => {
                     btn.addEventListener('click', function() {
-                        // Grab all data
                         const price = parseFloat(this.getAttribute('data-price'));
                         const points = parseInt(this.getAttribute('data-points'));
 
-                        // Fill standard data
                         document.getElementById('checkout-apptId').value = this.getAttribute('data-apptid');
                         document.getElementById('checkout-customerName').innerText = this.getAttribute('data-customer');
                         document.getElementById('checkout-serviceName').innerText = this.getAttribute('data-service');
 
-                        // Set initial price logic
                         document.getElementById('checkout-originalPrice').value = price;
                         document.getElementById('checkout-priceInput').value = price;
                         document.getElementById('checkout-priceDisplay').innerText = "RM " + price.toFixed(2);
 
-                        // Set Loyalty Points Logic
                         document.getElementById('checkout-currentPoints').innerText = points;
                         document.getElementById('loyaltyPointsBox').style.display = 'block'; // Show the box
 
                         const checkbox = document.getElementById('usePoints');
-                        checkbox.checked = false; // Reset checkbox
+                        checkbox.checked = false;
 
-                        // Toggle whether they can click the checkbox based on 100 point rule
                         if (points >= 100) {
                             document.getElementById('redeemSwitchContainer').style.display = 'block';
                             document.getElementById('notEnoughPointsText').style.display = 'none';
@@ -599,12 +594,10 @@
                         const existingDate = this.getAttribute('data-date');
                         const existingTime = this.getAttribute('data-time');
 
-                        // 2. Build the Date Dropdown AND select the existing date
                         if (typeof window.populateEditDates === "function") {
                             window.populateEditDates(existingDate); 
                         }
 
-                        // 3. Build the Time Dropdown AND select the existing time
                         if (typeof window.updateEditTimeSlots === "function") {
                             window.updateEditTimeSlots(existingTime);
                         }
@@ -613,7 +606,6 @@
             });
     
             function printReceipt(receiptId, date, customerName, plateNo, serviceName, method, amount) {
-                // Open a larger, centered popup window
                 const width = 1200;
                 const height = 800;
                 const left = (screen.width / 2) - (width / 2);
@@ -621,8 +613,7 @@
                 const printWindow = window.open('', '_blank', 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left);
                 
                 const formattedAmount = parseFloat(amount).toFixed(2);
-                
-                // Build the beautiful, modern HTML receipt
+
                 const html = `
                     <!DOCTYPE html>
                     <html lang="en">

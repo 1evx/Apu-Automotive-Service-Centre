@@ -40,6 +40,38 @@ public class AppointmentFacade extends AbstractFacade<Appointment> {
     }
     
     @PermitAll
+    public boolean hasActiveAppointments(model.Customer customer) {
+        try {
+            Long activeCount = (Long) getEntityManager().createQuery(
+                "SELECT COUNT(a) FROM Appointment a WHERE a.customer = :cust AND a.status IN ('Scheduled', 'In Progress')")
+                .setParameter("cust", customer)
+                .getSingleResult();
+
+            return activeCount > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+    
+    @PermitAll
+    public boolean hasActiveAppointments(model.Technician technician) {
+        try {
+            Long activeCount = (Long) getEntityManager().createQuery(
+                "SELECT COUNT(a) FROM Appointment a WHERE a.technician = :tech AND a.status IN ('Scheduled', 'In Progress')")
+                .setParameter("tech", technician)
+                .getSingleResult();
+
+            return activeCount > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+    
+    @PermitAll
     public List<Appointment> findByTechnicianAndDate(Technician technician, Date date) {
         TypedQuery<Appointment> query = em.createQuery(
             "SELECT a FROM Appointment a WHERE a.technician = :tech AND a.appointmentDate = :date AND a.status != 'Cancelled'", 

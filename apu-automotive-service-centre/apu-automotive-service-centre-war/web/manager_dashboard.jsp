@@ -17,7 +17,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>APU CARE - Manager Analytics Dashboard</title>
+        <title>APU ASC - Manager Analytics Dashboard</title>
         
         <link rel="shortcut icon" href="static/img/favicon.png">
         <link rel="stylesheet" href="static/css/bootstrap.min.css">
@@ -223,13 +223,18 @@
                                                                         <th class="text-end pe-3">Market Share (%)</th>
                                                                     </tr>
                                                                 </thead>
+                                                                <c:set var="totalServicesSold" value="0" />
+                                                                <c:forEach items="${requestScope.servicePopularity}" var="row">
+                                                                    <c:set var="totalServicesSold" value="${totalServicesSold + row[1]}" />
+                                                                </c:forEach>
+
                                                                 <tbody id="popularityTableBody">
                                                                     <c:forEach items="${requestScope.servicePopularity}" var="row">
                                                                         <tr>
                                                                             <td class="fw-bold text-dark">${row[0]}</td>
                                                                             <td class="text-center">${row[1]}</td>
                                                                             <td class="text-end pe-3">
-                                                                                <fmt:formatNumber value="${(row[1] / requestScope.statJobsCompleted) * 100}" maxFractionDigits="1"/>%
+                                                                                <fmt:formatNumber value="${(row[1] / totalServicesSold) * 100}" maxFractionDigits="1"/>%
                                                                             </td>
                                                                         </tr>
                                                                     </c:forEach>
@@ -678,7 +683,7 @@
         
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                // 1. Smooth Tab Switching Logic
+                //smooth Tab Switching Logic
                 const sidebarButtons = document.querySelectorAll('.sidebar-btn');
                 const dashboardSections = document.querySelectorAll('.dashboard-section');
 
@@ -702,7 +707,7 @@
 
                 if (window.location.hash) activateTab(window.location.hash.substring(1));
 
-                // 2. Staff Search Filtering
+                //staff Search Filtering
                 const staffSearch = document.getElementById('staffSearch');
                 const staffTypeFilter = document.getElementById('staffTypeFilter');
 
@@ -730,7 +735,6 @@
                 if (staffSearch) staffSearch.addEventListener('keyup', filterStaffTable);
                 if (staffTypeFilter) staffTypeFilter.addEventListener('change', filterStaffTable);
 
-                // 3. Modal Data Population
                 const editModal = document.getElementById('editStaffModal');
                 if (editModal) {
                     editModal.addEventListener('show.bs.modal', function (e) {
@@ -746,12 +750,10 @@
                         document.getElementById('edit-staff-address').value = b.dataset.address;   
                         document.getElementById('edit-staff-active').value = b.dataset.active;     
 
-                        // Hide all special fields first
                         document.getElementById('edit-manager-fields').style.display = 'none';
                         document.getElementById('edit-technician-fields').style.display = 'none';
                         document.getElementById('edit-counter-fields').style.display = 'none';
 
-                        // Show the correct special fields based on role
                         if (b.dataset.role === 'Manager') {
                             document.getElementById('edit-manager-fields').style.display = 'block';
                             document.getElementById('edit-staff-office').value = b.dataset.office || '';
@@ -777,7 +779,7 @@
                     });
                 }
 
-                // 4. CHART.JS ANALYTICS INITIALIZATION
+                //chartjs initialization
                 const serviceLabels = [], serviceData = [];
                 <c:forEach items="${requestScope.servicePopularity}" var="row">
                     serviceLabels.push("${row[0]}");
@@ -900,10 +902,9 @@
                     });
                 }
 
-                // Run on load
                 updateRevenueReport();
                 
-                // --- STAFF EFFICIENCY ANALYTICS ---
+                //staff efficiency
                 const staffNamesEff = [];
                 const staffJobCountsEff = [];
                 const staffRevenueEff = [];
@@ -961,7 +962,7 @@
                     });
                 }
                 
-                // --- MARKET POPULARITY ANALYTICS ---
+                //market popularity
                 const popularityLabels = [];
                 const popularityData = [];
 
@@ -1002,7 +1003,7 @@
                     });
                 }
                 
-                // --- TECHNICIAN SATISFACTION ANALYTICS ---
+                //technician satisfaction
                 const techNames = [];
                 const avgRatings = [];
 
@@ -1037,7 +1038,7 @@
                     });
                 }
                 
-                // --- DETAILED REVIEW TABLE FILTER ---
+                //review filter
                 const techReviewSearch = document.getElementById('techReviewSearch');
                 
                 if (techReviewSearch) {
@@ -1056,7 +1057,7 @@
                     });
                 }
                 
-                // --- 3-WAY APPOINTMENT MASTER FILTER ---
+                //appointment filter
                 const appSearch = document.getElementById('appSearch');
                 const appStatusFilter = document.getElementById('appStatusFilter');
                 const appDateFilter = document.getElementById('appDateFilter');
@@ -1104,19 +1105,19 @@
 
                 resultsDiv.innerHTML = "<p class='text-muted'><i class='fa-solid fa-spinner fa-spin me-2'></i> Thinking and querying database...</p>";
 
-                // Send the question to your Servlet without reloading the page
+                //send the question to Servlet without reloading the page
                 const response = await fetch('AIAssistantServlet', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'question=' + encodeURIComponent(query)
                 });
 
-                // Display the HTML table returned by the Servlet
+                //display the HTML table returned by the Servlet
                 const html = await response.text();
                 resultsDiv.innerHTML = html;
             }
             function printRevenueChart() {
-                // 1. Get the Canvas and the Title
+                //get the Canvas and the Title
                 const canvas = document.getElementById('dailyRevenueChart');
                 const chartTitle = document.getElementById('revChartTitle').innerText;
 
@@ -1125,13 +1126,13 @@
                     return;
                 }
 
-                // 2. Convert the Canvas into a high-quality image URL
+                //convert the Canvas into a high-quality image URL
                 const chartImageURL = canvas.toDataURL('image/png', 1.0);
 
-                // 3. Open a clean, hidden popup window
+                //open a clean, hidden popup window
                 let printWindow = window.open('', '_blank', 'width=900,height=700');
 
-                // 4. Write pure HTML into the new window (Just the title and the image)
+                //Write pure HTML into the new window (Just the title and the image)
                 printWindow.document.write('<html><head><title>Revenue Report</title>');
                 printWindow.document.write('<style>');
                 printWindow.document.write('body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }');
@@ -1143,19 +1144,17 @@
                 printWindow.document.write('<img src="' + chartImageURL + '" />');
                 printWindow.document.write('</body></html>');
 
-                printWindow.document.close(); // Finish loading the HTML
+                printWindow.document.close(); //finish loading the HTML
 
-                // 5. Tell the window to print itself once the image finishes loading
+                //tell the window to print itself once the image finishes loading
                 printWindow.onload = function() {
                     printWindow.focus();
                     printWindow.print();
-                    // Optional: close the popup automatically after printing
-                    // printWindow.close(); 
                 };
             }
             
             function printStaffChart() {
-                // 1. Get the Canvas using your exact ID
+                //get the Canvas using your exact ID
                 const canvas = document.getElementById('staffEfficiencyChart');
                 const chartTitle = "Technician Performance Leaderboard";
 
@@ -1164,13 +1163,13 @@
                     return;
                 }
 
-                // 2. Convert the Canvas into a high-quality image URL
+                //convert the Canvas into a high-quality image URL
                 const chartImageURL = canvas.toDataURL('image/png', 1.0);
 
-                // 3. Open a clean, hidden popup window
+                //open a clean, hidden popup window
                 let printWindow = window.open('', '_blank', 'width=900,height=700');
 
-                // 4. Write pure HTML into the new window
+                //write pure HTML into the new window
                 printWindow.document.write('<html><head><title>Staff Performance Report</title>');
                 printWindow.document.write('<style>');
                 printWindow.document.write('body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }');
@@ -1182,9 +1181,9 @@
                 printWindow.document.write('<img src="' + chartImageURL + '" />');
                 printWindow.document.write('</body></html>');
 
-                printWindow.document.close(); // Finish loading the HTML
+                printWindow.document.close(); //finish loading the HTML
 
-                // 5. Tell the window to print itself once the image finishes loading
+                //tell the window to print itself once the image finishes loading
                 printWindow.onload = function() {
                     printWindow.focus();
                     printWindow.print();

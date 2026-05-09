@@ -30,8 +30,7 @@ public class AIAssistantServlet extends HttpServlet {
     @EJB
     private SystemUserFacade systemUserFacade;
 
-    private static final String API_KEY = "AIzaSyB9CKZdNL2yHAa_sJTFyp67EdPbNIenajc"; 
-    // Use v1beta for Gemini 2.5 Flash
+    private static final String API_KEY = "AIzaSyB1TYqHLqqVvuaJ-suz__89Ml4SyN1lpJc"; 
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY;
 
     @Override
@@ -47,7 +46,7 @@ public class AIAssistantServlet extends HttpServlet {
         }
 
         try {
-            // PATCH 1: Updated Prompt to ban IDs and force JOINs for Names
+            // Prompt to ban IDs and force JOINs for Names
             String promptText = "You are a SQL expert for a car service center. Database Schema (Apache Derby): "
                 + "APP.MY_USER (USERID, USERNAME, EMAIL, PASSWORDHASH, ROLE, ISACTIVE, FULLNAME, PHONENUMBER, ADDRESS, ICNUMBER); "
                 + "APP.COUNTER_STAFF (USERID, SHIFTTYPE); "
@@ -179,12 +178,12 @@ public class AIAssistantServlet extends HttpServlet {
         // THE FIX: A smart loop that skips escaped characters like \"
         int end = -1;
         for (int i = start; i < raw.length(); i++) {
-            // If we see a backslash, skip the next character (it's escaped!)
+            // if see a backslash, skip the next character (it's escaped!)
             if (raw.charAt(i) == '\\') {
                 i++; 
                 continue;
             }
-            // If we see an unescaped quote, THAT is the true end of the JSON string
+            // if see an unescaped quote, THAT is the true end of the JSON string
             if (raw.charAt(i) == '"') {
                 end = i;
                 break;

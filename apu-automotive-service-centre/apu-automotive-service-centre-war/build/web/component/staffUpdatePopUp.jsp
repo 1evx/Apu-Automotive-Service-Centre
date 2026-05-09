@@ -99,13 +99,13 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Find all the "Edit" buttons in the data table
+            //find all the "Edit" buttons in the data table
             const editButtons = document.querySelectorAll('.edit-staff-btn');
 
             editButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     
-                    // 1. Read data attributes from the clicked button
+                    //read data attributes from the clicked button
                     const id = this.getAttribute('data-id');
                     const role = this.getAttribute('data-role');
                     const name = this.getAttribute('data-name');
@@ -116,7 +116,7 @@
                     const address = this.getAttribute('data-address');
                     const isActive = this.getAttribute('data-active');
 
-                    // 2. Fill the modal's standard text boxes
+                    // fill the text box
                     document.getElementById('edit-staff-id').value = id;
                     document.getElementById('edit-staff-role-display').value = role;
                     document.getElementById('edit-staff-role').value = role;
@@ -131,13 +131,12 @@
                         document.getElementById('edit-staff-active').value = isActive;
                     }
 
-                    // 3. Reset UI: Hide all dynamic fields
                     document.getElementById('edit-manager-fields').style.display = 'none';
                     document.getElementById('edit-supermanager-fields').style.display = 'none';
                     document.getElementById('edit-technician-fields').style.display = 'none';
                     document.getElementById('edit-counter-fields').style.display = 'none';
 
-                    // 4. Show only the correct field block based on the staff's role
+                    // show correct field block based on role
                     if (role === 'Manager') {
                         document.getElementById('edit-manager-fields').style.display = 'block';
                     } else if (role === 'SuperManager' || role === 'SUPER_MANAGER') {

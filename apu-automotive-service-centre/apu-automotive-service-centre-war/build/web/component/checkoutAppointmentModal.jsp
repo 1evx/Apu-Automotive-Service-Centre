@@ -81,30 +81,25 @@
         let pointsInput = document.getElementById('pointsToRedeem');
         let typedPoints = parseInt(pointsInput.value) || 0;
 
-        // SAFETY CHECK 1: Cap at maximum points
+        // cap at maximum points
         if (typedPoints > maxPoints) {
             typedPoints = maxPoints;
         }
 
-        // SAFETY CHECK 2: Force it into strict blocks of 100! 
-        // (If they type 150, this forces it to 100. If they type 99, it forces it to 0)
+        // force it into blocks of 100!
         let validPointsToRedeem = Math.floor(typedPoints / 100) * 100;
 
-        // Optional: Only update the input box value when they click away, so it doesn't interrupt typing
         if (event && event.type === 'change') {
             pointsInput.value = validPointsToRedeem; 
         }
 
-        // MATH: Calculate discount based ONLY on valid 100-point blocks
         let totalDiscount = (validPointsToRedeem / 100) * 10.00;
         let newPrice = originalPrice - totalDiscount;
-
-        // SAFETY CHECK 3: Prevent negative prices
+        
         if (newPrice < 0) {
             newPrice = 0;
         }
 
-        // Update the UI
         document.getElementById('checkout-priceInput').value = newPrice.toFixed(2);
         document.getElementById('checkout-priceDisplay').innerText = "RM " + newPrice.toFixed(2);
     }

@@ -5187,7 +5187,7 @@ input.main-search-input::placeholder {
 /* 16.Banner */
 .banner-wrapper.style1 {
   position: relative;
-  background-image: url(../img/bg/bannerBG1_1.jpg);
+  background-image: url(../img/bg/bannerBG1_1.png);
 }
 .banner-wrapper.style1 .shape1_1 {
   position: absolute;
@@ -5277,7 +5277,7 @@ input.main-search-input::placeholder {
 }
 .banner-wrapper.style2 {
   position: relative;
-  background-image: url(../img/bg/bannerBG2_1.jpg);
+  background-image: url(../img/bg/bannerBG1_1.png);
 }
 .banner-wrapper.style2 .shape1_1 {
   position: absolute;
@@ -5738,7 +5738,7 @@ input.main-search-input::placeholder {
 
 /* 17.Breadcumb */
 .breadcumb-wrapper {
-  background-image: url(../img/bg/breadcumb.jpg);
+  background-image: url(../img/bg/bannerBG2_2.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -6850,6 +6850,15 @@ input.main-search-input::placeholder {
   background: var(--title);
   color: var(--white);
 }
+.chefe-card.style2 .chefe-content a h3 {
+  color: var(--title);
+  font-family: var(--title-font);
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
+  margin-bottom: 10px;
+}
 .chefe-card.style2 .icon span {
   margin-right: 10px;
   position: relative;
@@ -6869,6 +6878,7 @@ input.main-search-input::placeholder {
   top: 8px;
   right: 50px;
 }
+
 @media (max-width: 1600px) {
   .chefe-card.style2 .icon {
     right: -105px;
@@ -12858,6 +12868,36 @@ table.woocommerce-product-attributes {
 .rating-select p.stars.selected a:not(.active)::before {
   content: "\f005";
   font-weight: 700;
+}
+
+@keyframes highlightPulsePremium {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); 
+        background-color: transparent;
+    }
+    15% { 
+        transform: scale(1.02); /* The 3D pop effect */
+        background-color: rgba(13, 110, 253, 0.08) !important; /* The blue background from version 1 */
+        box-shadow: 0 0 15px rgba(13, 110, 253, 0.8) !important; /* The strong blue glow from version 1 */
+    }
+    85% { 
+        transform: scale(1.02);
+        background-color: rgba(13, 110, 253, 0.08) !important; 
+        box-shadow: 0 0 15px rgba(13, 110, 253, 0.8) !important; 
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); 
+        background-color: transparent;
+    }
+}
+
+.pulse-highlight {
+    animation: highlightPulsePremium 2.5s ease-in-out; 
+    border-radius: 0.375rem; 
+    position: relative; 
+    z-index: 10; 
 }
 
 @media (max-width: 767px) {

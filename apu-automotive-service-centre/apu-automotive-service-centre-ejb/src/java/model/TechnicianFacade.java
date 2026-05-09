@@ -35,4 +35,11 @@ public class TechnicianFacade extends AbstractFacade<Technician> {
         ).getResultList();
     }
     
+    public List<Technician> findAllActiveTechnicians() {
+        return em.createQuery(
+            "SELECT t FROM Technician t WHERE t.isActive = true", 
+            Technician.class
+        ).getResultList();
+    }
+    
 }
