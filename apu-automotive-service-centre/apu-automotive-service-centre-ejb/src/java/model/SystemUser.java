@@ -101,6 +101,14 @@ public abstract class SystemUser implements Serializable {
         return role;
     }
 
+    public String getDisplayRole() {
+        if (role == null || role.trim().isEmpty()) {
+            return "";
+        }
+
+        return toTitleCase(role.replace('_', ' ').replace('-', ' '));
+    }
+
     public String getName() {
         return fullname;
     }
@@ -129,6 +137,14 @@ public abstract class SystemUser implements Serializable {
         return fullname;
     }
 
+    public String getDisplayName() {
+        if (fullname == null || fullname.trim().isEmpty()) {
+            return "";
+        }
+
+        return toTitleCase(fullname);
+    }
+
     public void setFullName(String fullname) {
         this.fullname = fullname;
     }
@@ -148,7 +164,26 @@ public abstract class SystemUser implements Serializable {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
-    
-    
+
+    private String toTitleCase(String value) {
+        String normalized = value.trim().toLowerCase().replaceAll("\\s+", " ");
+        StringBuilder formatted = new StringBuilder(normalized.length());
+        boolean capitalizeNext = true;
+
+        for (int i = 0; i < normalized.length(); i++) {
+            char currentChar = normalized.charAt(i);
+
+            if (Character.isWhitespace(currentChar)) {
+                capitalizeNext = true;
+                formatted.append(currentChar);
+            } else if (capitalizeNext) {
+                formatted.append(Character.toUpperCase(currentChar));
+                capitalizeNext = false;
+            } else {
+                formatted.append(currentChar);
+            }
+        }
+
+        return formatted.toString();
+    }
 }
