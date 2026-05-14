@@ -1,5 +1,7 @@
 package controller;
 
+import auth.AuthRoles;
+import auth.AuthSupport;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -30,11 +32,11 @@ public class UpdateProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        SystemUser currentUser = (SystemUser) session.getAttribute("currentUser");
+        SystemUser currentUser = AuthSupport.getCurrentUser(request);
         
         // Security Check
         if (currentUser == null) {
-            response.sendRedirect("login.jsp");
+            AuthSupport.redirectToLogin(request, response, AuthSupport.SESSION_EXPIRED_MESSAGE);
             return;
         }
 
@@ -47,36 +49,19 @@ public class UpdateProfileServlet extends HttpServlet {
             String address = request.getParameter("address");
             String password = request.getParameter("password");
             String icNumber = IcNumberValidator.normalizeMalaysianIc(request.getParameter("icNumber"));
+            String redirectTarget = AuthSupport.getDashboardRedirectForRole(AuthRoles.fromUser(currentUser));
 
             if (!PhoneNumberValidator.isValidMalaysianPhoneNumber(phoneNumber)) {
                 session.setAttribute("popupMessage", "Update failed. Please enter a valid Malaysian phone number starting with 01.");
                 session.setAttribute("popupType", "error");
-                
-                if (currentUser instanceof CounterStaff) {
-                    response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
-                } else if (currentUser instanceof Technician) {
-                    response.sendRedirect("TechnicianDashboardServlet#edit-profile");
-                } else if (currentUser instanceof Customer) { 
-                    response.sendRedirect("CustomerDashboardServlet#edit-profile");
-                } else {
-                    response.sendRedirect("ManagerDashboardServlet#edit-profile"); 
-                }
+                response.sendRedirect(redirectTarget);
                 return;
             }
 
             if (!IcNumberValidator.isValidMalaysianIc(icNumber)) {
                 session.setAttribute("popupMessage", "Update failed. Please enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX.");
                 session.setAttribute("popupType", "error");
-                
-                if (currentUser instanceof CounterStaff) {
-                    response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
-                } else if (currentUser instanceof Technician) {
-                    response.sendRedirect("TechnicianDashboardServlet#edit-profile");
-                } else if (currentUser instanceof Customer) { 
-                    response.sendRedirect("CustomerDashboardServlet#edit-profile");
-                } else {
-                    response.sendRedirect("ManagerDashboardServlet#edit-profile"); 
-                }
+                response.sendRedirect(redirectTarget);
                 return;
             }
 
@@ -133,9 +118,6 @@ public class UpdateProfileServlet extends HttpServlet {
                 // 6. Save to Database
                 systemUserFacade.edit(userToUpdate);
 
-                // 7. Refresh the Session
-                session.setAttribute("currentUser", userToUpdate);
-
                 session.setAttribute("popupMessage", "Your profile has been successfully updated!");
                 session.setAttribute("popupType", "success");
             } else {
@@ -144,30 +126,14 @@ public class UpdateProfileServlet extends HttpServlet {
             }
             
             // 8. Redirect back to the exact dashboard they came from
-            if (currentUser instanceof CounterStaff) {
-                response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
-            } else if (currentUser instanceof Technician) {
-                response.sendRedirect("TechnicianDashboardServlet#edit-profile");
-            } else if (currentUser instanceof Customer) { 
-                response.sendRedirect("CustomerDashboardServlet#edit-profile");
-            } else {
-                response.sendRedirect("ManagerDashboardServlet#edit-profile"); 
-            }
+            response.sendRedirect(redirectTarget);
 
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("popupMessage", "An error occurred while updating your profile. The email, phone number, or IC number may already be in use.");
             session.setAttribute("popupType", "error");
             
-            if (currentUser instanceof CounterStaff) {
-                response.sendRedirect("CounterStaffDashboardServlet#edit-profile");
-            } else if (currentUser instanceof Technician) {
-                response.sendRedirect("TechnicianDashboardServlet#edit-profile");
-            } else if (currentUser instanceof Customer) { 
-                response.sendRedirect("CustomerDashboardServlet#edit-profile");
-            } else {
-                response.sendRedirect("ManagerDashboardServlet#edit-profile");
-            }
+            response.sendRedirect(AuthSupport.getDashboardRedirectForRole(AuthRoles.fromUser(currentUser)));
         }
     }
 }

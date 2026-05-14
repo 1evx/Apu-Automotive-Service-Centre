@@ -15,9 +15,9 @@
             <div class="d-flex text-white align-items-center">
                 <span class="me-4">
                     <i class="fa-solid fa-user-tie me-2"></i>     
-                    ${sessionScope.currentUser.displayRole} 
+                    ${currentUser.displayRole} 
                     - 
-                    <span>${sessionScope.currentUser.displayName}</span>
+                    <span>${currentUser.displayName}</span>
                 </span>
                 <a href="LogoutServlet" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
             </div>

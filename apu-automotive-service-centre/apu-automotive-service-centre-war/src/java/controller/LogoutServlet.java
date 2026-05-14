@@ -1,5 +1,6 @@
 package controller;
 
+import auth.AuthSupport;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,6 +33,8 @@ public class LogoutServlet extends HttpServlet {
         HttpSession newSession = request.getSession(true);
         newSession.setAttribute("popupMessage", "You have been successfully logged out. Have a great day!");
         newSession.setAttribute("popupType", "success");
+        newSession.removeAttribute(AuthSupport.AUTH_USER_SESSION_KEY);
+        newSession.removeAttribute(AuthSupport.LEGACY_ROLE_SESSION_KEY);
         
         // 4. Send them back to the login screen
         response.sendRedirect("login.jsp");

@@ -4,8 +4,8 @@
  */
 package controller;
 
+import auth.AuthSupport;
 import java.io.IOException;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,10 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.Manager;
 import model.ServiceType;
 import model.ServiceTypeFacade;
-import model.SuperManager;
 import model.SystemUser;
 
 /**
@@ -35,15 +33,7 @@ public class UpdateServiceServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        SystemUser currentUser = (SystemUser) session.getAttribute("currentUser");
-        
-
-        if (currentUser == null || (!(currentUser instanceof Manager) && !(currentUser instanceof SuperManager))) {
-            session.setAttribute("popupMessage", "Security Alert: Only Managers can update services.");
-            session.setAttribute("popupType", "error");
-            response.sendRedirect("login.jsp");
-            return;
-        }
+        SystemUser currentUser = AuthSupport.getCurrentUser(request);
 
         try {
             Long serviceId = Long.parseLong(request.getParameter("serviceTypeId"));

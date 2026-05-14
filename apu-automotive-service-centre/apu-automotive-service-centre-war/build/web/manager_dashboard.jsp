@@ -563,49 +563,49 @@
                                     </div>
                                     <div class="card-body p-4">
                                         <form action="UpdateProfileServlet" method="POST">
-                                            <input type="hidden" name="userId" value="${sessionScope.currentUser.userId}">
+                <input type="hidden" name="userId" value="${currentUser.userId}">
 
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Full Name</label>
-                                                    <input type="text" class="form-control" name="fullName" value="${sessionScope.currentUser.fullName}" required>
+                            <input type="text" class="form-control" name="fullName" value="${currentUser.fullName}" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Username</label>
-                                                    <input type="text" class="form-control bg-light" name="username" value="${sessionScope.currentUser.username}" readonly>
+                            <input type="text" class="form-control bg-light" name="username" value="${currentUser.username}" readonly>
                                                     <small class="text-muted">Username cannot be changed.</small>
                                                 </div>
 
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Email Address</label>
-                                                    <input type="email" class="form-control bg-light" name="email" value="${sessionScope.currentUser.email}" readonly>
+                            <input type="email" class="form-control bg-light" name="email" value="${currentUser.email}" readonly>
                                                 </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">IC / Passport Number</label>
-                            <input type="text" class="form-control" name="icNumber" value="${sessionScope.currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
+   <input type="text" class="form-control" name="icNumber" value="${currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
                         </div>
 
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Phone Number</label>
-                            <input type="text" class="form-control" name="phoneNumber" value="${sessionScope.currentUser.phoneNumber}" placeholder="0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
+   <input type="text" class="form-control" name="phoneNumber" value="${currentUser.phoneNumber}" placeholder="0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
                                                 </div>
                                                 <c:if test="${sessionScope.role eq 'Manager'}">
                                                     <div class="col-md-6 mb-3">
                                                         <label class="form-label fw-bold">Office Location</label>
-                                                        <input type="text" class="form-control" name="officeLocation" value="${sessionScope.currentUser.officeLocation}">
+                                <input type="text" class="form-control" name="officeLocation" value="${currentUser.officeLocation}">
                                                     </div>
                                                 </c:if>
 
                                                 <c:if test="${sessionScope.role eq 'SUPER_MANAGER'}">
                                                     <div class="col-md-6 mb-3">
                                                         <label class="form-label fw-bold">Master Clearance</label>
-                                                        <input type="text" class="form-control" name="masterClearance" value="${sessionScope.currentUser.masterClearance}">
+                                <input type="text" class="form-control" name="masterClearance" value="${currentUser.masterClearance}">
                                                     </div>
                                                 </c:if>
                                                 <div class="col-md-12 mb-3">
                                                     <label class="form-label fw-bold">Home Address</label>
-                                                    <textarea class="form-control" name="address" rows="2">${sessionScope.currentUser.address}</textarea>
+                            <textarea class="form-control" name="address" rows="2">${currentUser.address}</textarea>
                                                 </div>
 
                                                 <div class="col-12 mt-3">
@@ -654,7 +654,7 @@
                                         <div class="bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 30px;">
                                             <i class="fa-solid fa-user-tie"></i>
                                         </div>
-                                        <h5 class="mb-1">${sessionScope.currentUser.fullName}</h5>
+                <h5 class="mb-1">${currentUser.fullName}</h5>
                                         <p class="small text-muted mb-4 fw-bold">SYSTEM MANAGER</p>
                                         
                                         <a href="#dashboard-home" class="theme-btn style6 sidebar-btn active w-100 mb-2">Reports Center</a>

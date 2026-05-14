@@ -11,7 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.*;
 
 /**
@@ -29,15 +28,6 @@ public class ManagerDashboardServlet extends HttpServlet {
     @EJB private SystemUserFacade systemUserFacade;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        Object currentUser = (session != null) ? session.getAttribute("currentUser") : null;
-
-        // BOUNCER: Kick them out if they are NOT a Manager AND NOT a SuperManager
-        if (currentUser == null || (!(currentUser instanceof Manager) && !(currentUser instanceof SuperManager))) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
         // Load fresh data into REQUEST scope (dies after page loads)
         request.setAttribute("statJobsCompleted", appointmentFacade.countCompletedJobs());
         request.setAttribute("statTotalRevenue", paymentFacade.calculateTotalRevenue());

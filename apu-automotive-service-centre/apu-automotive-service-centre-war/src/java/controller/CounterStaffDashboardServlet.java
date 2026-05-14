@@ -5,15 +5,12 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.*;
 
 /**
@@ -31,20 +28,6 @@ public class CounterStaffDashboardServlet extends HttpServlet {
     @EJB private TechnicianFacade technicianFacade;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null || !(session.getAttribute("currentUser") instanceof CounterStaff)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        // Filter for available technicians
-//        List<Technician> availableTechs = new ArrayList<>();
-//        for (SystemUser staff : systemUserFacade.getAllStaff()) {
-//            if (staff instanceof Technician && ((Technician) staff).isIsAvailable()) {
-//                availableTechs.add((Technician) staff);
-//            }
-//        }
-
         request.setAttribute("customerList", customerFacade.findAllActive());
         request.setAttribute("technicianList", technicianFacade.findAvailableAndActiveTechnicians());
         request.setAttribute("serviceList", serviceTypeFacade.findAllActive());

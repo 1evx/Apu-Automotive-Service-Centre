@@ -4,6 +4,7 @@
  */
 package controller;
 
+import auth.AuthSupport;
 import model.Appointment;
 import model.Comment;
 import model.Feedback;
@@ -18,7 +19,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -38,18 +38,10 @@ public class ViewAppointmentDetailsServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // 1. Security Check: Ensure user is logged in
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("currentUser") == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
         // 2. Get the specific Appointment ID clicked by the manager
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect("manager_dashboard.jsp#view-feedback");
+            response.sendRedirect("ManagerDashboardServlet#view-appointment");
             return;
         }
 
@@ -72,12 +64,12 @@ public class ViewAppointmentDetailsServlet extends HttpServlet {
                 // 6. Forward the user to the new details page
                 request.getRequestDispatcher("appointment_details.jsp").forward(request, response);
             } else {
-                response.sendRedirect("manager_dashboard.jsp#view-feedback");
+                response.sendRedirect("ManagerDashboardServlet#view-appointment");
             }
 
         } catch (NumberFormatException e) {
             // If the URL has text instead of a number, send them back safely
-            response.sendRedirect("manager_dashboard.jsp#view-feedback");
+            response.sendRedirect("ManagerDashboardServlet#view-appointment");
         }
     }
 

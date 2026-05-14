@@ -4,6 +4,7 @@
  */
 package controller;
 
+import auth.AuthSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.*;
 
 /**
@@ -27,13 +27,7 @@ public class TechnicianDashboardServlet extends HttpServlet {
     @EJB private CommentFacade commentFacade;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null || !(session.getAttribute("currentUser") instanceof Technician)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        Technician tech = (Technician) session.getAttribute("currentUser");
+        Technician tech = (Technician) AuthSupport.getCurrentUser(request);
 
         List<Appointment> myTasks = appointmentFacade.findByTechnician(tech);
         double avgRating = commentFacade.calculateAverageRatingForTechnician(tech);

@@ -4,6 +4,7 @@
  */
 package controller;
 
+import auth.AuthSupport;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -38,15 +39,7 @@ public class RegisterStaffServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        SystemUser currentUser = (SystemUser) session.getAttribute("currentUser");
-        
-        // 1. UPDATE THE BOUNCER: Allow BOTH Manager and SuperManager to access this Servlet
-        if (currentUser == null || (!(currentUser instanceof Manager) && !(currentUser instanceof SuperManager))) {
-            session.setAttribute("popupMessage", "Security Alert: Only authorized management can register new staff.");
-            session.setAttribute("popupType", "error");
-            response.sendRedirect("login.jsp");
-            return;
-        }
+        SystemUser currentUser = AuthSupport.getCurrentUser(request);
 
         try {
             // 1. Grab all standard data from the Modal

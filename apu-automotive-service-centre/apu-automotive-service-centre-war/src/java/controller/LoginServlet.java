@@ -1,5 +1,8 @@
 package controller;
 
+import auth.AuthRoles;
+import auth.AuthSupport;
+import auth.AuthenticatedUserSession;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -74,55 +77,29 @@ public class LoginServlet extends HttpServlet {
             SystemUser user = SystemUserFacade.authenticate(email, password);
 
             if (user != null) {
-                HttpSession session = request.getSession();
-                session.setAttribute("currentUser", user);
+                HttpSession existingSession = request.getSession(false);
+                if (existingSession != null) {
+                    existingSession.invalidate();
+                }
+
+                HttpSession session = request.getSession(true);
+                String role = AuthRoles.fromUser(user);
+                session.setAttribute(AuthSupport.AUTH_USER_SESSION_KEY,
+                        new AuthenticatedUserSession(user.getUserId(), role, user.getFullName()));
+                session.setAttribute(AuthSupport.LEGACY_ROLE_SESSION_KEY, AuthRoles.toLegacySessionRole(role));
                 session.setAttribute("popupMessage", "Welcome back, " + user.getFullName() + "!");
                 session.setAttribute("popupType", "success");
 
                 // Role-Based Routing
-                if (user instanceof Manager || user instanceof SuperManager) {
-    
-                    // Set the specific role so the rest of the system knows who they are
-                    if (user instanceof SuperManager) {
-                        session.setAttribute("role", "SUPER_MANAGER");
-                    } else {
-                        session.setAttribute("role", "Manager");
-                    }
-
+                if (AuthRoles.MANAGER.equals(role) || AuthRoles.SUPER_MANAGER.equals(role)) {
                     // Send BOTH of them to the exact same dashboard
                     response.sendRedirect("ManagerDashboardServlet");
-                }else if (user instanceof CounterStaff) {
+                } else if (AuthRoles.COUNTER_STAFF.equals(role)) {
                     response.sendRedirect("CounterStaffDashboardServlet");
-                } else if (user instanceof Technician) {
-//                    Technician tech = (Technician) user;
-//                    
-//                    // Fetch only THIS technician's tasks
-//                    List<Appointment> myTasks = AppointmentFacade.findByTechnician(tech);
-//                    List<Comment> allComments = CommentFacade.findAll();
-//                    List<Comment> myComments = new java.util.ArrayList<>();
-//                    
-//                    for (Comment c : allComments) {
-//                        // Only add the comment if it belongs to an appointment assigned to this technician
-//                        if (c.getAppointment().getTechnician().getUserId().equals(tech.getUserId())) {
-//                            myComments.add(c);
-//                    }
-//}
-//                    session.setAttribute("myComments", myComments);
-//                    session.setAttribute("myTasks", myTasks);
-                    
+                } else if (AuthRoles.TECHNICIAN.equals(role)) {
                     response.sendRedirect("TechnicianDashboardServlet");
-                } else if (user instanceof Customer) {
-//                    Customer customer = (Customer) user;
-//                    
-//                    List<Appointment> myAppointments = AppointmentFacade.getAppointmentsByCustomer(customer);
-//                    List<Feedback> myFeedback = FeedbackFacade.getFeedbackByCustomer(customer);
-//                    List<Comment> myComments = CommentFacade.getCommentsByCustomer(customer);
-//                    
-//                    session.setAttribute("myAppointments", myAppointments);
-//                    session.setAttribute("myFeedback", myFeedback);
-//                    session.setAttribute("myComments", myComments);
+                } else if (AuthRoles.CUSTOMER.equals(role)) {
                     response.sendRedirect("CustomerDashboardServlet#current-appointments");
-                    
                 } else {
                     // Fallback for missing roles
                     session.setAttribute("popupMessage", "Login Error: Unknown User Role.");
@@ -144,4 +121,4 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("login.jsp");
         }
     }
-    }
+}

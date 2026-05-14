@@ -4,6 +4,7 @@
  */
 package controller;
 
+import auth.AuthSupport;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -30,14 +31,7 @@ public class UpdateStaffServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        SystemUser currentUser = (SystemUser) session.getAttribute("currentUser");
-        
-        if (currentUser == null || (!(currentUser instanceof Manager) && !(currentUser instanceof SuperManager))) {
-            session.setAttribute("popupMessage", "Security Alert: Only authorized management can update staff.");
-            session.setAttribute("popupType", "error");
-            response.sendRedirect("login.jsp");
-            return;
-        }
+        SystemUser currentUser = AuthSupport.getCurrentUser(request);
 
         try {
             // 2. Grab general form data
@@ -104,11 +98,6 @@ public class UpdateStaffServlet extends HttpServlet {
 
                 // 6. Save to Database
                 SystemUserFacade.edit(staffToUpdate);
-
-                // Check if they just updated themselves, and refresh their session if they did!
-                if (currentUser.getUserId().equals(staffToUpdate.getUserId())) {
-                    session.setAttribute("currentUser", staffToUpdate);
-                }
 
                 session.setAttribute("popupMessage", "Staff record updated successfully!");
                 session.setAttribute("popupType", "success");

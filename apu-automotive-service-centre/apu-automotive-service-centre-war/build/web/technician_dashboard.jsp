@@ -205,30 +205,30 @@
                                     </div>
                                     <div class="card-body p-4">
                                         <form action="UpdateProfileServlet" method="POST">
-                                            <input type="hidden" name="userId" value="${sessionScope.currentUser.userId}">
+                      <input type="hidden" name="userId" value="${currentUser.userId}">
 
                                             <h5 class="mb-3 text-primary"><i class="fa-solid fa-address-card me-2"></i>General Information</h5>
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Full Name</label>
-                                                    <input type="text" class="form-control" name="fullName" value="${sessionScope.currentUser.fullName}" required>
+                              <input type="text" class="form-control" name="fullName" value="${currentUser.fullName}" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Username</label>
-                                                    <input type="text" class="form-control bg-light" name="username" value="${sessionScope.currentUser.username}" readonly>
+                              <input type="text" class="form-control bg-light" name="username" value="${currentUser.username}" readonly>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Email Address</label>
-                                                    <input type="email" class="form-control bg-light" name="email" value="${sessionScope.currentUser.email}" readonly>
+                              <input type="email" class="form-control bg-light" name="email" value="${currentUser.email}" readonly>
                                                     <small class="text-muted">Contact an admin to change your email.</small>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">IC Number</label>
-                                                    <input type="text" class="form-control" name="icNumber" value="${sessionScope.currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
+                              <input type="text" class="form-control" name="icNumber" value="${currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Phone Number</label>
-                                                    <input type="text" class="form-control" name="phoneNumber" value="${sessionScope.currentUser.phoneNumber}" placeholder="0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
+                              <input type="text" class="form-control" name="phoneNumber" value="${currentUser.phoneNumber}" placeholder="0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold text-danger"><i class="fa-solid fa-lock me-1"></i> Update Password (Optional)</label>
@@ -237,7 +237,7 @@
                                                 
                                                 <div class="col-md-12 mb-3 mt-2">
                                                     <label class="form-label fw-bold">Home Address</label>
-                                                    <textarea class="form-control" name="address" rows="2" placeholder="Enter your full address...">${sessionScope.currentUser.address}</textarea>
+                              <textarea class="form-control" name="address" rows="2" placeholder="Enter your full address...">${currentUser.address}</textarea>
                                                 </div>
                                             </div>
 
@@ -245,13 +245,13 @@
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Specialization</label>
-                                                    <input type="text" class="form-control" name="specialization" value="${sessionScope.currentUser.specialization}" required>
+                              <input type="text" class="form-control" name="specialization" value="${currentUser.specialization}" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold">Current Availability</label>
                                                     <select class="form-select" name="isAvailable">
-                                                        <option value="true" ${sessionScope.currentUser.isAvailable ? 'selected' : ''}>Available for Jobs</option>
-                                                        <option value="false" ${!sessionScope.currentUser.isAvailable ? 'selected' : ''}>Currently Busy / Unavailable</option>
+                                  <option value="true" ${currentUser.isAvailable ? 'selected' : ''}>Available for Jobs</option>
+                                  <option value="false" ${!currentUser.isAvailable ? 'selected' : ''}>Currently Busy / Unavailable</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -337,9 +337,9 @@
                                         </div>
                                         <div class="dishes-content text-center">
                                             <a href="#edit-profile">
-                                                <h3 class="mb-1">${sessionScope.currentUser.fullName}</h3>
+                          <h3 class="mb-1">${currentUser.fullName}</h3>
                                             </a>
-                                            <div class="text-muted small mb-3">Technician | ${sessionScope.currentUser.email}</div>
+                      <div class="text-muted small mb-3">Technician | ${currentUser.email}</div>
 
                                             <div class="mb-4">
                                                 <span class="badge bg-light border border-warning text-dark fs-6 rounded-pill px-3 py-2 shadow-sm">

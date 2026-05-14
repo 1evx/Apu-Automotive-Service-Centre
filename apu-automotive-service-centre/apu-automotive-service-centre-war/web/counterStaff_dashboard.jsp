@@ -59,48 +59,48 @@
                                     </div>
                                     <div class="card-body p-4">
                                         <form action="UpdateProfileServlet" method="POST">
-                                            <input type="hidden" name="userId" value="${sessionScope.currentUser.userId}">
+                        <input type="hidden" name="userId" value="${currentUser.userId}">
 
                                             <div class="row">
                                                 <div class="col-md-4 mb-3">
                                                     <label class="form-label fw-bold small text-muted">System Role</label>
-                                                    <input type="text" class="form-control bg-light" value="${sessionScope.currentUser.class.simpleName}" readonly>
+                                <input type="text" class="form-control bg-light" value="${currentUser.class.simpleName}" readonly>
                                                 </div>
                                                 <div class="col-md-8 mb-3">
                                                     <label class="form-label fw-bold small text-muted">Full Name</label>
-                                                    <input type="text" name="fullName" class="form-control" value="${sessionScope.currentUser.fullName}" required>
+                                <input type="text" name="fullName" class="form-control" value="${currentUser.fullName}" required>
                                                 </div>
                                             </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold small text-muted">Email Address</label>
-                                <input type="email" name="email" class="form-control" value="${sessionScope.currentUser.email}" required>
+            <input type="email" name="email" class="form-control" value="${currentUser.email}" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold small text-muted">IC Number</label>
-                                <input type="text" name="icNumber" class="form-control" value="${sessionScope.currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
+            <input type="text" name="icNumber" class="form-control" value="${currentUser.icNumber}" placeholder="YYMMDD-XX-XXXX" pattern="[0-9]{6}-[0-9]{2}-[0-9]{4}" maxlength="14" inputmode="numeric" title="Enter a valid Malaysian IC number in the format YYMMDD-XX-XXXX." oninput="this.value = formatMalaysianIc(this.value)" required>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold small text-muted"><i class="fa-solid fa-phone me-1"></i> Phone Number</label>
-                                <input type="text" name="phoneNumber" class="form-control" value="${sessionScope.currentUser.phoneNumber}" placeholder="e.g., 0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
+            <input type="text" name="phoneNumber" class="form-control" value="${currentUser.phoneNumber}" placeholder="e.g., 0123456789" pattern="01[0-9]{8,9}" maxlength="11" inputmode="numeric" title="Enter a valid Malaysian phone number starting with 01." oninput="this.value = formatMalaysianPhone(this.value)" required>
                             </div>
                         </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold small text-muted">Home Address</label>
-                                                <textarea name="address" class="form-control" rows="2" placeholder="Your full address...">${sessionScope.currentUser.address}</textarea>
+                            <textarea name="address" class="form-control" rows="2" placeholder="Your full address...">${currentUser.address}</textarea>
                                             </div>
 
                                             <div class="row border-top pt-4 mt-2">
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label fw-bold small text-muted">Preferred Shift Type</label>
                                                     <select name="shiftType" class="form-select">
-                                                        <option value="Morning" ${sessionScope.currentUser.shiftType == 'Morning' ? 'selected' : ''}>Morning Shift (8 AM - 4 PM)</option>
-                                                        <option value="Evening" ${sessionScope.currentUser.shiftType == 'Evening' ? 'selected' : ''}>Evening Shift (3 PM - 11 PM)</option>
+                                    <option value="Morning" ${currentUser.shiftType == 'Morning' ? 'selected' : ''}>Morning Shift (8 AM - 4 PM)</option>
+                                    <option value="Evening" ${currentUser.shiftType == 'Evening' ? 'selected' : ''}>Evening Shift (3 PM - 11 PM)</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6 mb-4">
@@ -385,9 +385,9 @@
                                         </div>
                                         <div class="dishes-content">
                                             <a href="#edit-profile">
-                                                <h3>${sessionScope.currentUser.fullName}</h3>
+                            <h3>${currentUser.fullName}</h3>
                                             </a>
-                                            <div class="text mb-4">Counter Staff | ${sessionScope.currentUser.email}</div>
+                        <div class="text mb-4">Counter Staff | ${currentUser.email}</div>
                                             
                                             <a href="#edit-profile" class="theme-btn style6 sidebar-btn active">
                                                 <i class="fa-solid fa-user-pen fa-fw"></i> My Profile

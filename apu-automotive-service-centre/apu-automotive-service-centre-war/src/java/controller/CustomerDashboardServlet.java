@@ -4,6 +4,7 @@
  */
 package controller;
 
+import auth.AuthSupport;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.*;
 
 /**
@@ -27,13 +27,7 @@ public class CustomerDashboardServlet extends HttpServlet {
     @EJB private ServiceTypeFacade serviceTypeFacade;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null || !(session.getAttribute("currentUser") instanceof Customer)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        Customer customer = (Customer) session.getAttribute("currentUser");
+        Customer customer = (Customer) AuthSupport.getCurrentUser(request);
 
         request.setAttribute("myAppointments", appointmentFacade.getAppointmentsByCustomer(customer));
         request.setAttribute("myFeedback", feedbackFacade.getFeedbackByCustomer(customer));
